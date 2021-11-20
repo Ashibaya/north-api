@@ -13,7 +13,7 @@ middleware = [Middleware(
     allow_headers=['*'],
 )]
 
-app = FastAPI(middleware=middleware)
+app = FastAPI(root_path="/api",middleware=middleware)
 
 
 @app.get('/hello')
