@@ -1,0 +1,1 @@
+{"id":"848c3632-dbc2-469c-9cc0-3ae9b61c9ea4","space":7903,"runtime":"python3.9","name":"north-api","path":"o0z4qt","project":"c0qr5rcw","account":"144798365827","region":"ap-southeast-1","deps":["sqlalchemy","bcrypt","python-jose","python-multipart","fastapi","passlib","psycopg2-binary"],"envs":null,"public":false,"log_level":"","cron":""}
