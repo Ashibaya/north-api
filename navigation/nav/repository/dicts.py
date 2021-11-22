@@ -18,14 +18,15 @@ def get_units(db: Session):
     return db.query(models.Unit).all()
 
 def update_unit(db: Session, unit: schemas.UnitAdd):
-    model = models.Unit(**unit)
+    vals = unit.dict()
+    model = models.Unit(**unit.dict())
     db_unit = db.query(models.Unit).filter(id == model.id)
-    if not db_unit.first():
+    if not db_unit.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Unit with id {id} not found")
-    db_unit.update().values(model)
+    db_unit.update(vals)
     db.commit()
-    return db_unit
+    return model
 
 
 def get_unit(db: Session, id: int):
@@ -59,6 +60,16 @@ def get_cargos(db: Session):
 def get_cargo(db: Session, id: int):
     return db.query(models.Cargo).filter(models.Cargo.id == id).first()
 
+def update_cargo(db: Session, cargo: schemas.CargoAdd):
+    vals = cargo.dict()
+    model = models.Cargo(**cargo.dict())
+    db_cargo = db.query(models.Cargo).filter(id == model.id)
+    if not db_cargo.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Cargo with id {id} not found")
+    db_cargo.update(vals)
+    db.commit()
+    return model
 
 def delete_cargo(db: Session, id: int):
     db_cargo = db.query(models.Cargo).filter(models.Cargo.id == id)
@@ -86,6 +97,17 @@ def get_regions(db: Session):
 
 def get_region(db: Session, id: int):
     return db.query(models.Region).filter(models.Region.id == id).first()
+
+def update_region(db: Session, region: schemas.RegionAdd):
+    vals = region.dict()
+    model = models.Region(**region.dict())
+    db_region = db.query(models.Region).filter(id == model.id)
+    if not db_region.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Region with id {id} not found")
+    db_region.update(vals)
+    db.commit()
+    return model
 
 
 def delete_region(db: Session, id: int):
@@ -116,6 +138,16 @@ def get_localities(db: Session):
 def get_locality(db: Session, id: int):
     return db.query(models.Locality).filter(models.Locality.id == id).first()
 
+def update_locality(db: Session, locality: schemas.LocalityAdd):
+    vals = locality.dict()
+    model = models.Locality(**locality.dict())
+    db_locality = db.query(models.Locality).filter(id == model.id)
+    if not db_locality.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Locality with id {id} not found")
+    db_locality.update(vals)
+    db.commit()
+    return model
 
 def delete_locality(db: Session, id: int):
     db_locality = db.query(models.Locality).filter(models.Locality.id == id)
@@ -144,6 +176,16 @@ def get_rivals(db: Session):
 def get_rival(db: Session, id: int):
     return db.query(models.Rival).filter(models.Rival.id == id).first()
 
+def update_rival(db: Session, rival: schemas.RivalAdd):
+    vals = rival.dict()
+    model = models.Rival(**rival.dict())
+    db_rival = db.query(models.Rival).filter(id == model.id)
+    if not db_rival.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Rival with id {id} not found")
+    db_rival.update(vals)
+    db.commit()
+    return model
 
 def delete_rival(db: Session, id: int):
     db_rival = db.query(models.Rival).filter(models.Rival.id == id)
@@ -177,6 +219,17 @@ def get_org(db: Session, id: int):
     return db.query(models.Org).filter(models.Org.id == id).first()
 
 
+def update_org(db: Session, org: schemas.OrgAdd):
+    vals = org.dict()
+    model = models.Org(**org.dict())
+    db_org = db.query(models.Org).filter(id == model.id)
+    if not db_org.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Org with id {id} not found")
+    db_org.update(vals)
+    db.commit()
+    return model
+
 def delete_org(db: Session, id: int):
     db_org = db.query(models.Org).filter(models.Org.id == id)
     if not db_org.first():
@@ -207,6 +260,17 @@ def get_point(db: Session, id: int):
     return db.query(models.Point).filter(models.Point.id == id).first()
 
 
+def update_point(db: Session, point: schemas.PointAdd):
+    vals = point.dict()
+    model = models.Point(**point.dict())
+    db_point = db.query(models.Point).filter(id == model.id)
+    if not db_point.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Point with id {id} not found")
+    db_point.update(vals)
+    db.commit()
+    return model
+
 def delete_point(db: Session, id: int):
     db_point = db.query(models.Point).filter(models.Point.id == id)
     if not db_point.first():
@@ -235,6 +299,17 @@ def get_boats(db: Session):
 
 def get_boat(db: Session, id: int):
     return db.query(models.Boat).filter(models.Boat.id == id).first()
+
+def update_boat(db: Session, boat: schemas.BoatAdd):
+    vals = boat.dict()
+    model = models.Boat(**boat.dict())
+    db_boat = db.query(models.Boat).filter(id == model.id)
+    if not db_boat.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Boat with id {id} not found")
+    db_boat.update(vals)
+    db.commit()
+    return model
 
 
 def delete_boat(db: Session, id: int):
@@ -267,6 +342,18 @@ def get_storages(db: Session):
 
 def get_storage(db: Session, id: int):
     return db.query(models.Storage).filter(models.Storage.id == id).first()
+
+
+def update_storage(db: Session, storage: schemas.StorageAdd):
+    vals = storage.dict()
+    model = models.Storage(**storage.dict())
+    db_storage = db.query(models.Storage).filter(id == model.id)
+    if not db_storage.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Storage with id {id} not found")
+    db_storage.update(vals)
+    db.commit()
+    return model
 
 
 def delete_storage(db: Session, id: int):

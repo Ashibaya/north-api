@@ -14,6 +14,9 @@ get_db = database.get_db
 def create_rival(request: schemas.RivalAdd, db: Session = Depends(get_db)):
     return dicts.create_rival(db, request)
 
+@router.put('/', response_model=schemas.RivalAdd)
+def update_rival(request: schemas.RivalAdd, db: Session = Depends(get_db)):
+    return dicts.update_rival(db, request)
 
 @router.delete('/{id}')
 def delete_rival(id: int, db: Session = Depends(get_db)):

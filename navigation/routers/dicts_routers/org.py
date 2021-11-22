@@ -15,6 +15,9 @@ get_db = database.get_db
 def create_org(request: schemas.OrgAdd, db: Session = Depends(get_db)):
     return dicts.create_org(db, request)
 
+@router.put('/', response_model=schemas.OrgAdd)
+def update_org(request: schemas.OrgAdd, db: Session = Depends(get_db)):
+    return dicts.update_org(db, request)
 
 @router.delete('/{id}')
 def delete_org(id: int, db: Session = Depends(get_db)):

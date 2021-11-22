@@ -15,6 +15,9 @@ get_db = database.get_db
 def create_locality(request: schemas.LocalityAdd, db: Session = Depends(get_db)):
     return dicts.create_locality(db, request)
 
+@router.put('/', response_model=schemas.LocalityAdd)
+def update_locality(request: schemas.LocalityAdd, db: Session = Depends(get_db)):
+    return dicts.update_locality(db, request)
 
 @router.delete('/{id}')
 def delete_locality(id: int, db: Session = Depends(get_db)):

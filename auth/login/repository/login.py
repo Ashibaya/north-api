@@ -50,6 +50,16 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
+def update_user(db: Session, user: schemas.UserCreate):
+    vals = user.dict()
+    model = models.User(**user.dict())
+    db_user = db.query(models.User).filter(id == model.id)
+    if not db_user.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"User with id {id} not found")
+    db_user.update(vals)
+    db.commit()
+    return model
 
 def get_roles(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Role).offset(skip).limit(limit).all()
@@ -68,6 +78,16 @@ def delete_role(db: Session, id: int):
     db.commit()
     return 'done'
 
+def update_role(db: Session, role: schemas.RoleCreate):
+    vals = role.dict()
+    model = models.Role(**role.dict())
+    db_role = db.query(models.Role).filter(id == model.id)
+    if not db_role.one_or_none():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Role with id {id} not found")
+    db_role.update(vals)
+    db.commit()
+    return model
 
 def create_roles(db: Session, role: schemas.RoleCreate):
     db_role = models.Role(name=role.name, description=role.description)

@@ -16,6 +16,10 @@ get_db = database.get_db
 def create_storage(request: schemas.StorageAdd, db: Session = Depends(get_db)):
     return dicts.create_storage(db, request)
 
+@router.put('/', response_model=schemas.StorageAdd)
+def update_storage(request: schemas.StorageAdd, db: Session = Depends(get_db)):
+    return dicts.update_storage(db, request)
+
 
 @router.delete('/{id}')
 def delete_storage(id: int, db: Session = Depends(get_db)):

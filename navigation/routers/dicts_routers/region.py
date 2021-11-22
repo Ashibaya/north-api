@@ -15,6 +15,9 @@ get_db = database.get_db
 def create_region(request: schemas.RegionAdd, db: Session = Depends(get_db)):
     return dicts.create_region(db, request)
 
+@router.put('/', response_model=schemas.RegionAdd)
+def update_region(request: schemas.RegionAdd, db: Session = Depends(get_db)):
+    return dicts.update_region(db, request)
 
 @router.delete('/{id}')
 def delete_region(id: int, db: Session = Depends(get_db)):

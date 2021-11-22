@@ -13,12 +13,12 @@ middleware = [Middleware(
     allow_headers=['*'],
 )]
 
-app = FastAPI(middleware=middleware)
+app = FastAPI(root_path = "/api",middleware=middleware)
 
 
-@app.get('/hello')
+@app.get('/')
 async def say_hello():
-    return {"text": "Hello!"}
+    return {"text": "Api is Work!"}
 
 app.include_router(
     router=auth.router,

@@ -1,5 +1,6 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, query
 from fastapi import HTTPException, status
+from sqlalchemy.sql.expression import select
 from navigation.nav.schemas import nav as schemas, dicts as dict_schemas
 from navigation.nav.models import nav as models, dicts as dict_models
 
@@ -7,6 +8,9 @@ from navigation.nav.models import nav as models, dicts as dict_models
 
 def create_decades(db: Session, year: int):
     #дописать функцию разделения на декады и записать в БД
+    if year in db.select(models.Decada).year:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Decade with year = {year} already added")
     return {'status':'done'}
 
 #customer

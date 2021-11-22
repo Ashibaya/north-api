@@ -21,6 +21,9 @@ get_db = database.get_db
 def create_role(request: schemas.RoleCreate, db: Session = Depends(get_db)):
     return user.create_roles(db, request)
 
+@router.put('/', response_model=schemas.Role)
+def update_role(request: schemas.RoleCreate, db: Session = Depends(get_db)):
+    return user.update_role(db, request)
 
 @router.get('/{id}', response_model=schemas.Role)
 def show_role(id: int, db: Session = Depends(get_db)):

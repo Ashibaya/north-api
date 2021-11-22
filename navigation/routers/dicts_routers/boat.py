@@ -17,6 +17,9 @@ get_db = database.get_db
 def create_boat(request: schemas.BoatAdd, db: Session = Depends(get_db)):
     return dicts.create_boat(db, request)
 
+@router.put('/', response_model=schemas.BoatAdd)
+def update_boat(request: schemas.BoatAdd, db: Session = Depends(get_db)):
+    return dicts.update_boat(db, request)
 
 @router.delete('/{id}')
 def delete_boat(id: int, db: Session = Depends(get_db)):

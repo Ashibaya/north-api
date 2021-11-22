@@ -15,6 +15,9 @@ get_db = database.get_db
 def create_cargo(request: schemas.CargoAdd, db: Session = Depends(get_db)):
     return dicts.create_cargo(db, request)
 
+@router.put('/', response_model=schemas.CargoAdd)
+def update_cargo(request: schemas.CargoAdd, db: Session = Depends(get_db)):
+    return dicts.update_cargo(db, request)
 
 @router.delete('/{id}')
 def delete_cargo(id: int, db: Session = Depends(get_db)):

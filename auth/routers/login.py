@@ -18,9 +18,11 @@ get_db = database.get_db
 
 @router.post('/', response_model=schemas.UserCreate)
 def create_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
-    print(request)
     return user.create_user(db, request)
 
+@router.put('/', response_model=schemas.UserCreate)
+def update_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
+    return user.update_user(db, request)
 
 @router.delete('/{id}')
 def delete_user(id: int, db: Session = Depends(get_db)):

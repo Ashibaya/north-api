@@ -16,6 +16,9 @@ get_db = database.get_db
 def create_point(request: schemas.PointAdd, db: Session = Depends(get_db)):
     return dicts.create_point(db, request)
 
+@router.put('/', response_model=schemas.PointAdd)
+def update_point(request: schemas.PointAdd, db: Session = Depends(get_db)):
+    return dicts.update_point(db, request)
 
 @router.delete('/{id}')
 def delete_point(id: int, db: Session = Depends(get_db)):
