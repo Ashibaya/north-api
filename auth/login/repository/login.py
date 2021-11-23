@@ -50,7 +50,7 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-def update_user(db: Session, user: schemas.UserCreate):
+def update_user(db: Session, user: schemas.User):
     vals = user.dict()
     model = models.User(**user.dict())
     db_user = db.query(models.User).filter(id == model.id)
