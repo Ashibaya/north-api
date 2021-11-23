@@ -16,12 +16,12 @@ router = APIRouter(
 get_db = database.get_db
 
 
-@router.post('/', response_model=schemas.UserCreate)
+@router.post('/', response_model=schemas.User)
 def create_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
     return user.create_user(db, request)
 
-@router.put('/', response_model=schemas.UserCreate)
-def update_user(request: schemas.UserCreate, db: Session = Depends(get_db)):
+@router.put('/', response_model=schemas.User)
+def update_user(request: schemas.User, db: Session = Depends(get_db)):
     return user.update_user(db, request)
 
 @router.delete('/{id}')
