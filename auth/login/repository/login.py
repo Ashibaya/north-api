@@ -54,7 +54,8 @@ def update_user(db: Session, user: schemas.User):
     vals = user.dict()
     model = models.User(**user.dict())
     db_user = db.query(models.User).filter(id == model.id)
-    if not db_user.one_or_none():
+    print(vals)
+    if db_user.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with id {id} not found")
     db_user.update(vals)
