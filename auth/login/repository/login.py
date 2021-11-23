@@ -82,7 +82,7 @@ def update_role(db: Session, role: schemas.Role):
     vals = role.dict()
     model = models.Role(**role.dict())
     db_role = db.query(models.Role).filter(id == model.id)
-    if not db_role.one_or_none():
+    if db_role.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Role with id {id} not found")
     db_role.update(vals)
