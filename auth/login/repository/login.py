@@ -78,7 +78,7 @@ def delete_role(db: Session, id: int):
     db.commit()
     return 'done'
 
-def update_role(db: Session, role: schemas.RoleCreate):
+def update_role(db: Session, role: schemas.Role):
     vals = role.dict()
     model = models.Role(**role.dict())
     db_role = db.query(models.Role).filter(id == model.id)
