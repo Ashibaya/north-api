@@ -75,27 +75,51 @@ class Bid(BidBaseModel):
     created_date: Optional[datetime] = None
     class Config:
         orm_mode = True
+class BidShow(Bid):
+    point_name: str
+    cargo_name: int
+    customer_name: int
+    supplier_name: int
 
 #Подтверждение заявки
 class BidConfirmBaseModel(BaseModel):
-    id: Optional[int] = None
     bid_id: int
     is_confirm: Optional[bool] = None
-    confirm_date: Optional[datetime] = None
     description: Optional[str] = None
+
+class BidConfirmCreate(BidConfirmBaseModel):
+    class Config:
+        orm_mode = True
+
+class BidConfirmShow(BidConfirmBaseModel):
+    id: Optional[int] = None
+    confirm_date: Optional[datetime] = None
+    bid: Optional[BidShow] = None
+    class Config:
+        orm_mode = True
+
 
 #Доставка заявки
 class BidDeliveryBaseModel(BaseModel):
-    id: Optional[int] = None
     bid_id: int
     start_point: int
     end_point: int
     quantity: float
     carrier_id: int
-    created_date: Optional[datetime] = None
     start_date: date
     end_date: date
 
+class BidDeliveryCreate(BidDeliveryBaseModel):
+    class Config:
+        orm_mode = True
+
+class BidDeliveryShow(BidDeliveryBaseModel):
+    id: Optional[int] = None
+    created_date: Optional[datetime] = None
+    bid: Optional[BidShow] = None
+    carrier_name: str
+    class Config:
+        orm_mode = True
 #Подтверждение доставки
 class BidDeliveryConfirmBaseModel(BaseModel):
     id: Optional[int] = None
@@ -103,7 +127,8 @@ class BidDeliveryConfirmBaseModel(BaseModel):
     is_confirm: Optional[bool] = None
     confirm_date: Optional[datetime] = None
     description: Optional[str] = None
-
+    class Config:
+        orm_mode = True
 
 #подтверждение заявки владельцем
 class BidOwnerConfirm(BaseModel):
@@ -112,3 +137,5 @@ class BidOwnerConfirm(BaseModel):
     is_confirm: Optional[bool] = None
     confirm_date: Optional[datetime] = None
     description: Optional[str]= None
+    class Config:
+        orm_mode = True

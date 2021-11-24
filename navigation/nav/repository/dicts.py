@@ -20,7 +20,7 @@ def get_units(db: Session):
 def update_unit(db: Session, unit: schemas.UnitAdd):
     vals = unit.dict()
     model = models.Unit(**unit.dict())
-    db_unit = db.query(models.Unit).filter(id == model.id)
+    db_unit = db.query(models.Unit).filter(models.Unit.id == model.id)
     if not db_unit.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Unit with id {id} not found")
@@ -63,7 +63,7 @@ def get_cargo(db: Session, id: int):
 def update_cargo(db: Session, cargo: schemas.CargoAdd):
     vals = cargo.dict()
     model = models.Cargo(**cargo.dict())
-    db_cargo = db.query(models.Cargo).filter(id == model.id)
+    db_cargo = db.query(models.Cargo).filter(models.Cargo.id == model.id)
     if not db_cargo.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Cargo with id {id} not found")
@@ -101,7 +101,7 @@ def get_region(db: Session, id: int):
 def update_region(db: Session, region: schemas.RegionAdd):
     vals = region.dict()
     model = models.Region(**region.dict())
-    db_region = db.query(models.Region).filter(id == model.id)
+    db_region = db.query(models.Region).filter(models.Region.id == model.id)
     if not db_region.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Region with id {id} not found")
@@ -141,7 +141,7 @@ def get_locality(db: Session, id: int):
 def update_locality(db: Session, locality: schemas.LocalityAdd):
     vals = locality.dict()
     model = models.Locality(**locality.dict())
-    db_locality = db.query(models.Locality).filter(id == model.id)
+    db_locality = db.query(models.Locality).filter(models.Locality.id == model.id)
     if not db_locality.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Locality with id {id} not found")
@@ -179,7 +179,7 @@ def get_rival(db: Session, id: int):
 def update_rival(db: Session, rival: schemas.RivalAdd):
     vals = rival.dict()
     model = models.Rival(**rival.dict())
-    db_rival = db.query(models.Rival).filter(id == model.id)
+    db_rival = db.query(models.Rival).filter(models.Rival.id == model.id)
     if not db_rival.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Rival with id {id} not found")
@@ -222,7 +222,7 @@ def get_org(db: Session, id: int):
 def update_org(db: Session, org: schemas.OrgAdd):
     vals = org.dict()
     model = models.Org(**org.dict())
-    db_org = db.query(models.Org).filter(id == model.id)
+    db_org = db.query(models.Org).filter(models.Org.id == model.id)
     if not db_org.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Org with id {id} not found")
@@ -263,7 +263,7 @@ def get_point(db: Session, id: int):
 def update_point(db: Session, point: schemas.PointAdd):
     vals = point.dict()
     model = models.Point(**point.dict())
-    db_point = db.query(models.Point).filter(id == model.id)
+    db_point = db.query(models.Point).filter(models.Point.id == model.id)
     if not db_point.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Point with id {id} not found")
@@ -303,7 +303,7 @@ def get_boat(db: Session, id: int):
 def update_boat(db: Session, boat: schemas.BoatAdd):
     vals = boat.dict()
     model = models.Boat(**boat.dict())
-    db_boat = db.query(models.Boat).filter(id == model.id)
+    db_boat = db.query(models.Boat).filter(models.Boat.id == model.id)
     if not db_boat.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Boat with id {id} not found")
@@ -347,7 +347,7 @@ def get_storage(db: Session, id: int):
 def update_storage(db: Session, storage: schemas.StorageAdd):
     vals = storage.dict()
     model = models.Storage(**storage.dict())
-    db_storage = db.query(models.Storage).filter(id == model.id)
+    db_storage = db.query(models.Storage).filter(models.Storage.id == model.id)
     if not db_storage.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Storage with id {id} not found")
