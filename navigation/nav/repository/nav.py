@@ -177,7 +177,7 @@ def make_bids(db: Session, bid_id: int = None):
     return db.execute("SELECT bids.*,points.name  as point_name,"\
                     " cargos.name as cargo_name, customers.name as customer_name,"\
                     " suppliers.name as supplier_name FROM bids JOIN points ON bids.point_id = points.id"\
-                    " JOIN cargo ON bids.cargo_id = cargos.id JOIN customers ON bids.customer_id = customers.id"\
+                    " JOIN cargos ON bids.cargo_id = cargos.id JOIN customers ON bids.customer_id = customers.id"\
                     " JOIN suppliers ON bids.supplier_id = suppliers.id"+bid)
 
 def get_bids(db: Session):
