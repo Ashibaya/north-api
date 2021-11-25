@@ -173,12 +173,17 @@ def get_bid(db: Session, id: int):
     return db.query(models.Bid).filter(models.Bid.id == id).first()
 
 def make_bids(db: Session, bid_id: int = None):
-    bid = f" WHERE bids.id = {bid_id}" if bid_id else ""
-    return db.execute("SELECT bids.*,points.name  as point_name,"\
-                    " cargos.name as cargo_name, customers.name as customer_name,"\
-                    " suppliers.name as supplier_name FROM bids JOIN points ON bids.point_id = points.id"\
-                    " JOIN cargos ON bids.cargo_id = cargos.id JOIN customers ON bids.customer_id = customers.id"\
-                    " JOIN suppliers ON bids.supplier_id = suppliers.id"+bid)
+    bids_db = db.query(models.Bid).all() if bid_id == None else get_bid(db, bid_id)
+    customer_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_customers(db)}
+    supplier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_suppliers(db)}
+    result =[]
+    for bid in bids_db:
+        bid["cargo_name"] = dict_repo.get_cargo(db,bid.cargo_id).name
+        bid["point_name"] = dict_repo.get_point(db,bid.point_id).name
+        bid["customer_name"] = customer_dict.get(bid.customer_id)
+        bid["supplier_name"] = supplier_dict.get(bid.supplier_id)
+        result.append(bid)
+    return result
 
 def get_bids(db: Session):
     return make_bids(db).all()
@@ -236,7 +241,7 @@ def get_bid_delivery(db: Session, id: int):
 def get_bids_delivery(db: Session):
     bids_delivery = db.query(models.BidDelivery).all()
     bid_dict = {it.id : it for it in get_bids(db)}
-    carrier_dict = { it.id: dict_repo.get_org(db, it.org_id) for it in dict_repo.get_carriers(db)}
+    carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_carriers(db)}
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery["bid"] = bid_dict.get(bid_delivery.bid_id)
