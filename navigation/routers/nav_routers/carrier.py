@@ -13,7 +13,7 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.Carrier)
+@router.post('/', response_model=schemas.CarrierShow)
 def create_carrier(request: schemas.Carrier, db: Session = Depends(get_db)):
     return nav.create_carrier(db, request)
 
@@ -23,7 +23,7 @@ def delete_carrier(id: int, db: Session = Depends(get_db)):
     return nav.delete_carrier(db, id)
 
 
-@router.get('/{id}', response_model=schemas.Carrier)
+@router.get('/{id}', response_model=schemas.CarrierShow)
 def get_carrier(id: int, db: Session = Depends(get_db)):
     return nav.get_carrier(db, id)
 

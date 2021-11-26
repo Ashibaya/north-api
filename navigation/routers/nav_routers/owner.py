@@ -13,7 +13,7 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.Owner)
+@router.post('/', response_model=schemas.OwnerShow)
 def create_owner(request: schemas.Owner, db: Session = Depends(get_db)):
     return nav.create_owner(db, request)
 
@@ -23,7 +23,7 @@ def delete_carrier(id: int, db: Session = Depends(get_db)):
     return nav.delete_carrier(db, id)
 
 
-@router.get('/{id}', response_model=schemas.Owner)
+@router.get('/{id}', response_model=schemas.OwnerShow)
 def get_owner(id: int, db: Session = Depends(get_db)):
     return nav.get_owner(db, id)
 

@@ -13,7 +13,7 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.Customer)
+@router.post('/', response_model=schemas.CustomerShow)
 def create_customer(request: schemas.Customer, db: Session = Depends(get_db)):
     return nav.create_customer(db, request)
 
@@ -23,7 +23,7 @@ def delete_customer(id: int, db: Session = Depends(get_db)):
     return nav.delete_customer(db, id)
 
 
-@router.get('/{id}', response_model=schemas.Customer)
+@router.get('/{id}', response_model=schemas.CustomerShow)
 def get_customer(id: int, db: Session = Depends(get_db)):
     return nav.get_customer(db, id)
 

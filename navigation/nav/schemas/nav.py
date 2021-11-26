@@ -23,7 +23,6 @@ class DecadaShow(DecadaBaseModel):
 #Заказчик
 
 class CustomerBaseModel(BaseModel):
-    id: Optional[int] = None
     org_id: int
 
 class Customer(CustomerBaseModel):
@@ -31,31 +30,48 @@ class Customer(CustomerBaseModel):
         orm_mode = True
 
 class CustomerShow(CustomerBaseModel):
-    pass
+    id: Optional[int] = None
+    class Config:
+        orm_mode = True
 
 #Поставщик
 class SupplierBaseModel(BaseModel):
-    id: Optional[int] = None
     org_id: int
 
 class Supplier(SupplierBaseModel):
     class Config:
         orm_mode = True
+
+class SupplierShow(SupplierBaseModel):
+    id: Optional[int] = None
+    class Config:
+        orm_mode = True
+
 #Перевозщик
 class CarrierBaseModel(BaseModel):
-    id: Optional[int] = None
     org_id: int
+
 class Carrier(CarrierBaseModel):
     class Config:
         orm_mode = True
 
+class CarrierShow(CarrierBaseModel):
+    id: Optional[int] = None
+    class Config:
+        orm_mode = True
 #Владелец
 class OwnerBaseModel(BaseModel):
-    id: Optional[int] = None
     org_id: int
+
 class Owner(OwnerBaseModel):
     class Config:
-        orm_mode = True    
+        orm_mode = True   
+
+class CarrierShow(CarrierBaseModel):
+    id: Optional[int] = None
+    class Config:
+        orm_mode = True 
+        
 #Заявка
 class BidBaseModel(BaseModel):
     point_id: int
