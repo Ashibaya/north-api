@@ -18,8 +18,8 @@ def create_decades(db: Session, year: int):
 
 def create_customer(db:Session, customer: schemas.Customer):
     db_customer = models.Customer(**customer.dict())
-    if not db.query(models.Customer).\
-        filter(models.Customer.id == db_customer.org_id).one_or_none():
+    if db.query(models.Customer).\
+        filter(models.Customer.id == db_customer.org_id).one_or_none() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Customer with id {db_customer.id} already added")
     db.add(db_customer)
@@ -33,7 +33,7 @@ def get_customers(db: Session):
 def get_customer(db: Session, org_id: int):
     db_customer = db.query(dict_models.Org)\
     .filter(dict_models.Org.id  == org_id).first()
-    if not db_customer:
+    if db_customer == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Customer with id {id} not found")
     return db_customer
@@ -53,8 +53,8 @@ def delete_customer(db: Session, org_id: int):
 
 def create_supplier(db:Session, supplier: schemas.Supplier):
     db_supplier = models.Supplier(**supplier.dict())
-    if not db.query(models.Supplier).\
-        filter(models.Supplier.id == db_supplier.org_id).one_or_none():
+    if db.query(models.Supplier).\
+        filter(models.Supplier.id == db_supplier.org_id).one_or_none() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supplier with id {db_supplier.id} already added")
     db.add(db_supplier)
@@ -68,7 +68,7 @@ def get_suppliers(db: Session):
 def get_supplier(db: Session, org_id: int):
     db_supplier = db.query(dict_models.Org)\
     .filter(dict_models.Org.id  == org_id).first()
-    if not db_supplier:
+    if db_supplier == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supplier with id {id} not found")
     return db_supplier
@@ -76,7 +76,7 @@ def get_supplier(db: Session, org_id: int):
 def delete_supplier(db: Session, org_id: int):
     db_supplier = db.query(models.Supplier)\
     .filter(models.Supplier.org_id  == org_id)
-    if not db_supplier.first():
+    if db_supplier.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supplier with org_id {org_id} not found")
     db_supplier.delete()
@@ -87,8 +87,8 @@ def delete_supplier(db: Session, org_id: int):
 
 def create_carrier(db:Session, carrier: schemas.Carrier):
     db_carrier = models.Carrier(**carrier.dict())
-    if not db.query(models.Carrier).\
-        filter(models.Carrier.id == db_carrier.org_id).one_or_none():
+    if db.query(models.Carrier).\
+        filter(models.Carrier.id == db_carrier.org_id).one_or_none() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {db_carrier.id} already added")
     db.add(db_carrier)
@@ -102,7 +102,7 @@ def get_carriers(db: Session):
 def get_carrier(db: Session, org_id: int):
     db_carrier = db.query(dict_models.Org)\
     .filter(dict_models.Org.id  == org_id).first()
-    if not db_carrier:
+    if db_carrier == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {id} not found")
     return db_carrier
@@ -110,7 +110,7 @@ def get_carrier(db: Session, org_id: int):
 def delete_carrier(db: Session, org_id: int):
     db_carrier = db.query(models.Carrier)\
     .filter(models.Carrier.org_id  == org_id)
-    if not db_carrier.first():
+    if db_carrier.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {id} not found")
     db_carrier.delete()
@@ -121,8 +121,8 @@ def delete_carrier(db: Session, org_id: int):
 
 def create_owner(db:Session, owner: schemas.Owner):
     db_owner = models.Owner(**owner.dict())
-    if not db.query(models.Owner).\
-        filter(models.Owner.id == db_owner.org_id).one_or_none():
+    if db.query(models.Owner).\
+        filter(models.Owner.id == db_owner.org_id).one_or_none() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Owner with id {db_owner.id} already added")
     db.add(db_owner)
@@ -136,7 +136,7 @@ def get_owners(db: Session):
 def get_owner(db: Session, org_id: int):
     db_owner = db.query(dict_models.Org)\
     .filter(dict_models.Org.id  == org_id).first()
-    if not db_owner:
+    if db_owner == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Owner with id {id} not found")
     return db_owner
@@ -144,7 +144,7 @@ def get_owner(db: Session, org_id: int):
 def delete_owner(db: Session, org_id: int):
     db_owner = db.query(models.Owner)\
     .filter(models.Owner.org_id  == org_id)
-    if not db_owner.first():
+    if db_owner.first() == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Owner with id {id} not found")
     db_owner.delete()
