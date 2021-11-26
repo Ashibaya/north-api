@@ -95,9 +95,12 @@ def create_carrier(db:Session, carrier: schemas.Carrier):
     db.commit()
     return db_carrier
 
+def make_carriers(db:Session):
+    return db.query(models.Carrier).all()
+
 def get_carriers(db: Session):
     return db.query(dict_models.Org)\
-    .filter(dict_models.Org.id._in(models.Carrier.org_id)).all()
+    .filter(dict_models.Org.id.in_([car.org_id for car in make_carriers(db)])).all()
 
 def get_carrier(db: Session, org_id: int):
     db_carrier = db.query(dict_models.Org)\
