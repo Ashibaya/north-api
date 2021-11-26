@@ -25,6 +25,8 @@ def create_customer(db:Session, customer: schemas.Customer):
     db.add(db_customer)
     db.commit()
     return db_customer
+def get_customers_origin(db: Session):
+    return db.query(models.Customer).all()
 
 def get_customers(db: Session):
     return db.query(dict_models.Org)\
@@ -60,7 +62,8 @@ def create_supplier(db:Session, supplier: schemas.Supplier):
     db.add(db_supplier)
     db.commit()
     return db_supplier
-
+def get_suppliers_origin(db: Session):
+    return db.query(models.Supplier).all()
 def get_suppliers(db: Session):
     return db.query(dict_models.Org)\
     .filter(dict_models.Org.id  == models.Supplier.org_id).all()
@@ -132,6 +135,9 @@ def create_owner(db:Session, owner: schemas.Owner):
     db.commit()
     return db_owner
 
+def get_owners_origin(db: Session):
+    return db.query(models.Owner).all()
+
 def get_owners(db: Session):
     return db.query(dict_models.Org)\
     .filter(dict_models.Org.id  == models.Owner.org_id).all()
@@ -177,8 +183,8 @@ def get_bid(db: Session, id: int):
 
 def make_bids(db: Session, bid_id: int = None):
     bids_db = db.query(models.Bid).all() if bid_id == None else get_bid(db, bid_id)
-    customer_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_customers(db)}
-    supplier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_suppliers(db)}
+    customer_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_customers_origin(db)}
+    supplier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_suppliers_origin(db)}
     result =[]
     for bid in bids_db:
         bid["cargo_name"] = dict_repo.get_cargo(db,bid.cargo_id).name
@@ -244,7 +250,7 @@ def get_bid_delivery(db: Session, id: int):
 def get_bids_delivery(db: Session):
     bids_delivery = db.query(models.BidDelivery).all()
     bid_dict = {it.id : it for it in get_bids(db)}
-    carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_carriers(db)}
+    carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in make_carriers(db)}
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery["bid"] = bid_dict.get(bid_delivery.bid_id)
