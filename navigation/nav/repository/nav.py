@@ -19,7 +19,7 @@ def create_decades(db: Session, year: int):
 def create_customer(db:Session, customer: schemas.Customer):
     db_customer = models.Customer(**customer.dict())
     if db.query(models.Customer).\
-        filter(models.Customer.id == db_customer.org_id).one_or_none() == None:
+        filter(models.Customer.id == db_customer.org_id).one_or_none() != None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Customer with id {db_customer.id} already added")
     db.add(db_customer)
@@ -54,7 +54,7 @@ def delete_customer(db: Session, org_id: int):
 def create_supplier(db:Session, supplier: schemas.Supplier):
     db_supplier = models.Supplier(**supplier.dict())
     if db.query(models.Supplier).\
-        filter(models.Supplier.id == db_supplier.org_id).one_or_none() == None:
+        filter(models.Supplier.id == db_supplier.org_id).one_or_none() != None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supplier with id {db_supplier.id} already added")
     db.add(db_supplier)
@@ -88,7 +88,7 @@ def delete_supplier(db: Session, org_id: int):
 def create_carrier(db:Session, carrier: schemas.Carrier):
     db_carrier = models.Carrier(**carrier.dict())
     if db.query(models.Carrier).\
-        filter(models.Carrier.id == db_carrier.org_id).one_or_none() == None:
+        filter(models.Carrier.id == db_carrier.org_id).one_or_none() != None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {db_carrier.id} already added")
     db.add(db_carrier)
@@ -122,7 +122,7 @@ def delete_carrier(db: Session, org_id: int):
 def create_owner(db:Session, owner: schemas.Owner):
     db_owner = models.Owner(**owner.dict())
     if db.query(models.Owner).\
-        filter(models.Owner.id == db_owner.org_id).one_or_none() == None:
+        filter(models.Owner.id == db_owner.org_id).one_or_none() != None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Owner with id {db_owner.id} already added")
     db.add(db_owner)
