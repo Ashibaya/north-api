@@ -67,11 +67,11 @@ class Owner(OwnerBaseModel):
     class Config:
         orm_mode = True   
 
-class CarrierShow(CarrierBaseModel):
+class OwnerShow(OwnerBaseModel):
     id: Optional[int] = None
     class Config:
         orm_mode = True 
-        
+
 #Заявка
 class BidBaseModel(BaseModel):
     point_id: int
