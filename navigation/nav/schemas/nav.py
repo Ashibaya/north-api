@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel
 from pydantic.types import constr
 from datetime import date, datetime
@@ -138,20 +138,42 @@ class BidDeliveryShow(BidDeliveryBaseModel):
         orm_mode = True
 #Подтверждение доставки
 class BidDeliveryConfirmBaseModel(BaseModel):
-    id: Optional[int] = None
     bid_delivery_id: int
     is_confirm: Optional[bool] = None
-    confirm_date: Optional[datetime] = None
     description: Optional[str] = None
+
+
+class BidDeliveryConfirmCreate(BidDeliveryConfirmBaseModel):
     class Config:
         orm_mode = True
 
-#подтверждение заявки владельцем
-class BidOwnerConfirm(BaseModel):
-    id: Optional[int]= None
-    bid_id: int
-    is_confirm: Optional[bool] = None
+class BidDeliveryConfirm(BidDeliveryConfirmBaseModel):
+    id: Optional[int] = None
     confirm_date: Optional[datetime] = None
-    description: Optional[str]= None
     class Config:
         orm_mode = True
+
+class BidDeliveryConfirmShow(BidDeliveryConfirm):
+    bid_delivery: Optional[BidDeliveryShow] = None
+    
+
+#подтверждение заявки владельцем
+class BidOwnerConfirmBaseModel(BaseModel):
+    bid_id: int
+    is_confirm: Optional[bool] = None
+    description: Optional[str]= None
+
+class BidOwnerConfirmCreate(BidOwnerConfirmBaseModel):
+    class Config:
+        orm_mode = True
+
+class BidOwnerConfirm(BidOwnerConfirmBaseModel):
+    id: Optional[int]= None
+    confirm_date: Optional[datetime] = None
+    class Config:
+        orm_mode = True
+
+class BidOwnerConfirmShow(BidOwnerConfirm):
+    bid: Optional[BidShow] = None
+    bid_delivery: List[BidDeliveryShow]
+    

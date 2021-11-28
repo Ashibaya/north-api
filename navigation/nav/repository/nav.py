@@ -247,7 +247,7 @@ def get_bid_delivery(db: Session, id: int):
     return db.query(models.BidDelivery).filter(models.BidDelivery.id == id).one_or_none()
 
 
-def get_bids_delivery(db: Session):
+def get_bids_delivery(db: Session, bid_id: int):
     bids_delivery = db.query(models.BidDelivery).all()
     bid_dict = {it.id : it for it in get_bids(db)}
     carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in make_carriers(db)}
@@ -257,3 +257,61 @@ def get_bids_delivery(db: Session):
         bid_delivery["carrier_name"] = carrier_dict.get(bid_delivery.carrier_id)
         bids.append(bid_delivery)
     return bids
+
+
+#bid_delivery_confirm
+
+def create_bid_delivery_confirm(db: Session, confirm: schemas.BidDeliveryConfirmCreate):
+    db_conf = models.BidDeliveryConfirm(**confirm.dict())
+    db.add(db_conf)
+    db.commit()
+    db.refresh(db_conf)
+    return db_conf
+
+def delete_bid_delivery_confirm(db: Session, id: int):
+    db_conf = db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.id == id)
+    db_conf.delete()
+    db.commit()
+    return {"status": "done"}
+
+def get_bid_delivery_confirm(db: Session, id: int):
+    return db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.od == id).one_or_none()
+
+
+def get_bids_delivery_confirm(db: Session, bid_id: int):
+    bids_conf = db.query(models.BidDeliveryConfirm).all() if bid_id == None else get_bid_delivery_confirm(db, bid_id)
+    bid_delivery_dict = { item.id: item for item in get_bids_delivery(db)}
+    resault = []
+    for item in bids_conf:
+        item["bid_delivery"]=bid_delivery_dict.get(item.delivery_id)
+        resault.append(item)
+    return resault
+
+#bid_owner_confirm
+
+def create_bid_owner_confirm(db: Session, confirm: schemas.BidOwnerConfirmCreate):
+    db_conf = models.BidOwnerConfirm(**confirm.dict())
+    db.add(db_conf)
+    db.commit()
+    db.refresh(db_conf)
+    return db_conf
+
+def delete_bid_owner_confirm(db: Session, id: int):
+    db_conf = db.query(models.BidOwnerConfirm).filter(models.BidOwnerConfirm.id == id)
+    db_conf.delete()
+    db.commit()
+    return {"status": "done"}
+
+def get_bid_owner_confirm(db: Session, id: int):
+    return db.query(models.BidOwnerConfirm).filter(models.BidOwnerConfirm.bid_id == id).one_or_none()
+
+
+def get_bids_owner_confirm(db: Session):
+    bids_conf = db.query(models.BidOwnerConfirm).all()
+    bid_dict = { item.id: item for item in get_bids(db)}
+    resault = []
+    for item in bids_conf:
+        item["bid"]=bid_dict.get(item.bid_id)
+        item["bid_delivery"] = get_bids_delivery(db, item.bid_id)
+        resault.append(item)
+    return resault
