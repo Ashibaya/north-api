@@ -279,13 +279,14 @@ def get_bids_confirm(db: Session):
     return bids
 
 def update_bid_confirm(db: Session, confirm: schemas.BidConfirm):
-    confirm = confirm.dict()
+    conf = confirm.dict()
     confirm_model = models.BidConfirm(**confirm.dict())
-    db_confirm = db.query(models.BidConfirm).filter(models.BidConfirm.id == confirm.id)
+    db_confirm = db.query(models.BidConfirm).filter(models.BidConfirm.id == conf.get("id"))
     if db_confirm.one_or_none()==None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"BidConfirm with id {id} not found")
-    db_confirm.update(confirm)
+    db_confirm.update(conf)
+    db.commit()
     return confirm_model
 #bid_delivery
 
@@ -310,7 +311,7 @@ def get_bid_delivery(db: Session, id: int):
 def get_bids_delivery(db: Session, bid_id: int):
     bids_delivery = db.query(models.BidDelivery).all()
     bid_dict = {it.id : it for it in get_bids(db)}
-    carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in make_carriers(db)}
+    carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_carriers_origin(db)}
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)
@@ -349,14 +350,15 @@ def get_bids_delivery_confirm(db: Session, bid_id: int):
         resault.append(item)
     return resault
 
-def update_bid_delivery_confirm(db: Session, confirm: schemas.BidDeliveryConfirm):
-    confirm = confirm.dict()
-    confirm_model = models.BidDeliveryConfirm(**confirm.dict())
-    db_confirm = db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.id == confirm.id)
+def update_bid_delivery_confirm(db: Session, confirm_schema: schemas.BidDeliveryConfirm):
+    confirm = confirm_schema.dict()
+    confirm_model = models.BidDeliveryConfirm(**confirm_schema.dict())
+    db_confirm = db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.id == confirm.get("id"))
     if db_confirm.one_or_none()==None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"BidDeliveryConfirm with id {id} not found")
     db_confirm.update(confirm)
+    db.commit()
     return confirm_model
 #bid_owner_confirm
 
@@ -388,10 +390,10 @@ def get_bids_owner_confirm(db: Session):
         resault.append(item)
     return resault
 
-def update_bid_owner_confirm(db: Session, confirm: schemas.BidOwnerConfirm):
-    confirm = confirm.dict()
-    confirm_model = models.BidOwnerConfirm(**confirm.dict())
-    db_confirm = db.query(models.BidOwnerConfirm).filter(models.BidOwnerConfirm.id == confirm.id)
+def update_bid_owner_confirm(db: Session, confirm_schema: schemas.BidOwnerConfirm):
+    confirm = confirm_schema.dict()
+    confirm_model = models.BidOwnerConfirm(**confirm_schema.dict())
+    db_confirm = db.query(models.BidOwnerConfirm).filter(models.BidOwnerConfirm.id == confirm.get("id"))
     if db_confirm.one_or_none()==None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"BidOwnerConfirm with id {id} not found")
