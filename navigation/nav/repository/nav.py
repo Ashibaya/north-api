@@ -70,10 +70,10 @@ def delete_customer(db: Session, org_id: int):
 
     #supplier
 
-def create_supplier(db:Session, supplier: schemas.Supplier):
+def create_supplier(db:Session, supplier: schemas.SupplierCreate):
     db_supplier = models.Supplier(**supplier.dict())
     if db.query(models.Supplier).\
-        filter(models.Supplier.id == db_supplier.org_id).one_or_none() != None:
+        filter(models.Supplier.org_id == db_supplier.org_id).one_or_none() != None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supplier with id {db_supplier.id} already added")
     db.add(db_supplier)
@@ -81,17 +81,29 @@ def create_supplier(db:Session, supplier: schemas.Supplier):
     return db_supplier
 def get_suppliers_origin(db: Session):
     return db.query(models.Supplier).all()
-def get_suppliers(db: Session):
-    return db.query(dict_models.Org)\
-    .filter(dict_models.Org.id  == models.Supplier.org_id).all()
 
-def get_supplier(db: Session, org_id: int):
-    db_supplier = db.query(dict_models.Org)\
-    .filter(dict_models.Org.id  == org_id).first()
+def get_supplier_origin(db: Session, id: int):
+    return db.query(models.Supplier).filter(models.Supplier.id == id).one_or_none()
+
+def get_supplier(db: Session, id: int):
+    db_supplier = get_supplier_origin(db, id)
     if db_supplier == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supplier with id {id} not found")
-    return db_supplier
+    supplier = get_dict_from_row(db_supplier)
+    supplier["org"] = dict_repo.get_org(db, supplier.get("org_id"))
+    
+    return supplier
+
+def get_suppliers(db: Session):
+    db_suppliers = get_suppliers_origin(db)
+    res = []
+    for item in db_suppliers:
+        supplier = get_dict_from_row(item)
+        supplier["org"] = dict_repo.get_org(db, supplier.get("org_id"))
+        res.append(supplier)
+
+    return res
 
 def delete_supplier(db: Session, org_id: int):
     db_supplier = db.query(models.Supplier)\
@@ -105,30 +117,39 @@ def delete_supplier(db: Session, org_id: int):
 
     #carrier
 
-def create_carrier(db:Session, carrier: schemas.Carrier):
+def create_carrier(db:Session, carrier: schemas.CarrierCreate):
     db_carrier = models.Carrier(**carrier.dict())
     if db.query(models.Carrier).\
-        filter(models.Carrier.id == db_carrier.org_id).one_or_none() != None:
+        filter(models.Carrier.org_id == db_carrier.org_id).one_or_none() != None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {db_carrier.id} already added")
     db.add(db_carrier)
     db.commit()
     return db_carrier
 
-def make_carriers(db:Session):
+def get_carriers_origin(db:Session):
     return db.query(models.Carrier).all()
 
 def get_carriers(db: Session):
-    return db.query(dict_models.Org)\
-    .filter(dict_models.Org.id.in_([car.org_id for car in make_carriers(db)])).all()
+    carriers = get_carriers_origin(db)
+    res = []
+    for item in carriers:
+        carrier = get_dict_from_row(item)
+        carrier["org"] = dict_repo.get_org(db, carrier.get("org_id"))
+        res.append(carrier)
+    return res
 
-def get_carrier(db: Session, org_id: int):
-    db_carrier = db.query(dict_models.Org)\
-    .filter(dict_models.Org.id  == org_id).first()
+def get_carrier_origin(db: Session, id: int):
+    return db.query(models.Carrier).filter(models.Carrier.id == id).one_or_none()
+
+def get_carrier(db: Session, id: int):
+    db_carrier = get_carrier_origin(db, id)
     if db_carrier == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {id} not found")
-    return db_carrier
+    carrier = get_dict_from_row(db_carrier)
+    carrier["org"] = dict_repo.get_org(db, carrier.get("org_id"))
+    return carrier
 
 def delete_carrier(db: Session, org_id: int):
     db_carrier = db.query(models.Carrier)\
@@ -156,16 +177,25 @@ def get_owners_origin(db: Session):
     return db.query(models.Owner).all()
 
 def get_owners(db: Session):
-    return db.query(dict_models.Org)\
-    .filter(dict_models.Org.id  == models.Owner.org_id).all()
+    owners = get_carriers_origin(db)
+    res = []
+    for item in owners:
+        owner = get_dict_from_row(item)
+        owner["org"] = dict_repo.get_org(db, owner.get("org_id"))
+        res.append(owner)
+    return res
 
-def get_owner(db: Session, org_id: int):
-    db_owner = db.query(dict_models.Org)\
-    .filter(dict_models.Org.id  == org_id).first()
+def get_owner_origin(db: Session, id: int):
+    return db.query(models.Owner).filter(models.Owner.id == id).one_or_none()
+
+def get_owner(db: Session, id: int):
+    db_owner = get_owner_origin(db, id)
     if db_owner == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Owner with id {id} not found")
-    return db_owner
+    owner = get_dict_from_row(db_owner)
+    owner["org"] = dict_repo.get_org(db, owner.get("org_id"))
+    return owner
 
 def delete_owner(db: Session, org_id: int):
     db_owner = db.query(models.Owner)\
