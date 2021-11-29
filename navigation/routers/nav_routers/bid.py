@@ -13,7 +13,7 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.BidShow)
+@router.post('/', response_model=schemas.Bid)
 def create_bid(request: schemas.BidCreate, db: Session = Depends(get_db)):
     return nav.create_bid(db, request)
 

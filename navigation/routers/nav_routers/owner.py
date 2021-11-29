@@ -13,8 +13,8 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.OwnerShow)
-def create_owner(request: schemas.Owner, db: Session = Depends(get_db)):
+@router.post('/', response_model=schemas.Owner)
+def create_owner(request: schemas.OwnerCreate, db: Session = Depends(get_db)):
     return nav.create_owner(db, request)
 
 

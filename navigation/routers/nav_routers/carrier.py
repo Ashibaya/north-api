@@ -13,8 +13,8 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.CarrierShow)
-def create_carrier(request: schemas.Carrier, db: Session = Depends(get_db)):
+@router.post('/', response_model=schemas.Carrier)
+def create_carrier(request: schemas.CarrierCreate, db: Session = Depends(get_db)):
     return nav.create_carrier(db, request)
 
 

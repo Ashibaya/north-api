@@ -5,6 +5,11 @@ from sqlalchemy.sql.expression import select
 from navigation.nav.schemas import nav as schemas, dicts as dict_schemas
 from navigation.nav.models import nav as models, dicts as dict_models
 from navigation.nav.repository import dicts as dict_repo
+
+def get_dict_from_row(obj):
+    res = obj.__dict__
+    res.pop("_sa_instance_state", None)
+    return res
 #decades
 
 def create_decades(db: Session, year: int):
@@ -16,10 +21,10 @@ def create_decades(db: Session, year: int):
 
 #customer
 
-def create_customer(db:Session, customer: schemas.Customer):
+def create_customer(db:Session, customer: schemas.CustomerCreate):
     db_customer = models.Customer(**customer.dict())
     if db.query(models.Customer).\
-        filter(models.Customer.id == db_customer.org_id).one_or_none() != None:
+        filter(models.Customer.org_id == db_customer.org_id).one_or_none() != None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Customer with id {db_customer.id} already added")
     db.add(db_customer)
@@ -28,16 +33,28 @@ def create_customer(db:Session, customer: schemas.Customer):
 def get_customers_origin(db: Session):
     return db.query(models.Customer).all()
 
-def get_customers(db: Session):
-    return db.query(dict_models.Org)\
-    .filter(dict_models.Org.id  == models.Customer.org_id).all()
+def get_customer_origin(db: Session, id: int):
+    return db.query(models.Customer).filter(models.Customer.id == id).one_or_none()
 
-def get_customer(db: Session, org_id: int):
-    db_customer = db.query(dict_models.Org)\
-    .filter(dict_models.Org.id  == org_id).first()
+def get_customer_by_org(db: Session, org_id: int):
+    return db.query(models.Customer).filter(models.Customer.org_id == org_id).one_or_none()
+
+def get_customers(db: Session):
+    orgs =  get_customers_origin(db)
+    res = []
+    for item in orgs:
+        item = get_dict_from_row(item)
+        item["org"] = dict_repo.get_org(db, item.get("org_id"))
+        res.append(item)
+    return res
+
+def get_customer(db: Session, id: int):
+    db_customer = get_customer_origin(db, id)
+    customer = get_dict_from_row(db_customer)
     if db_customer == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Customer with id {id} not found")
+    customer["org"] = dict_repo.get_org(db, db_customer.org_id)
     return db_customer
 
 def delete_customer(db: Session, org_id: int):
@@ -182,15 +199,16 @@ def get_bid(db: Session, id: int):
     return db.query(models.Bid).filter(models.Bid.id == id).first()
 
 def make_bids(db: Session, bid_id: int = None):
-    bids_db = db.query(models.Bid).all() if bid_id == None else get_bid(db, bid_id)
+    bids_db = db.query(models.Bid).all() if bid_id == None else [get_bid(db, bid_id)]
     customer_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_customers_origin(db)}
     supplier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_suppliers_origin(db)}
     result =[]
     for bid in bids_db:
-        bid["cargo_name"] = dict_repo.get_cargo(db,bid.cargo_id).name
-        bid["point_name"] = dict_repo.get_point(db,bid.point_id).name
-        bid["customer_name"] = customer_dict.get(bid.customer_id)
-        bid["supplier_name"] = supplier_dict.get(bid.supplier_id)
+        bid = get_dict_from_row(bid)
+        bid["cargo_name"] = dict_repo.get_cargo(db,bid.get("cargo_id")).name
+        bid["point_name"] = dict_repo.get_point(db,bid.get("point_id")).name
+        bid["customer_name"] = customer_dict.get(bid.get("customer_id"))
+        bid["supplier_name"] = supplier_dict.get(bid.get("supplier_id"))
         result.append(bid)
     return result
 
@@ -198,7 +216,7 @@ def get_bids(db: Session):
     return make_bids(db)
 
 def get_bid_info(db: Session, id: int):
-    return make_bids(db, id)
+    return make_bids(db, id)[0]
 #bid confirm
 
 def create_bid_confirm(db: Session, bid_confirm: schemas.BidConfirmCreate):
@@ -217,6 +235,7 @@ def delete_bid_confirm(db: Session,id: int):
 def get_bid_confirm(db: Session, id: int):
     bid_confirm = db.query(models.BidConfirm).filter(models.BidConfirm.id == id).one_or_none()
     bid = get_bid_info(db, bid_confirm.bid_id)
+    bid_confirm =get_dict_from_row(bid_confirm)
     bid_confirm["bid"] = bid
     return bid_confirm
 
@@ -224,7 +243,8 @@ def get_bids_confirm(db: Session):
     bids_confirm = db.query(models.BidConfirm).all()
     bids = []
     for bid in bids_confirm:
-        bid["bid"] = get_bid_info(db, bid.bid_id) 
+        bid = get_dict_from_row(bid)
+        bid["bid"] = get_bid_info(db, bid.get("bid_id"))
         bids.append(bid)
     return bids
 
@@ -253,8 +273,9 @@ def get_bids_delivery(db: Session, bid_id: int):
     carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in make_carriers(db)}
     bids = []
     for bid_delivery in bids_delivery:
-        bid_delivery["bid"] = bid_dict.get(bid_delivery.bid_id)
-        bid_delivery["carrier_name"] = carrier_dict.get(bid_delivery.carrier_id)
+        bid_delivery = get_dict_from_row(bid_delivery)
+        bid_delivery["bid"] = bid_dict.get(bid_delivery.get("bid_id"))
+        bid_delivery["carrier_name"] = carrier_dict.get(bid_delivery.get("carrier_id"))
         bids.append(bid_delivery)
     return bids
 
@@ -283,7 +304,8 @@ def get_bids_delivery_confirm(db: Session, bid_id: int):
     bid_delivery_dict = { item.id: item for item in get_bids_delivery(db)}
     resault = []
     for item in bids_conf:
-        item["bid_delivery"]=bid_delivery_dict.get(item.delivery_id)
+        item = get_dict_from_row(item)
+        item["bid_delivery"]=bid_delivery_dict.get(item.get("delivery_id"))
         resault.append(item)
     return resault
 
@@ -311,7 +333,8 @@ def get_bids_owner_confirm(db: Session):
     bid_dict = { item.id: item for item in get_bids(db)}
     resault = []
     for item in bids_conf:
-        item["bid"]=bid_dict.get(item.bid_id)
-        item["bid_delivery"] = get_bids_delivery(db, item.bid_id)
+        item = get_dict_from_row(item)
+        item["bid"]=bid_dict.get(item.get("bid_id"))
+        item["bid_delivery"] = get_bids_delivery(db, item.get("bid_id"))
         resault.append(item)
     return resault

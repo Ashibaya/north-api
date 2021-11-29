@@ -2,6 +2,7 @@ from typing import Optional, List
 from pydantic import BaseModel
 from pydantic.types import constr
 from datetime import date, datetime
+from navigation.nav.schemas import dicts
 
 #Декады
 class DecadaBaseModel(BaseModel):
@@ -25,53 +26,63 @@ class DecadaShow(DecadaBaseModel):
 class CustomerBaseModel(BaseModel):
     org_id: int
 
-class Customer(CustomerBaseModel):
+class CustomerCreate(CustomerBaseModel):
     class Config:
         orm_mode = True
-
-class CustomerShow(CustomerBaseModel):
+class Customer(CustomerBaseModel):
     id: Optional[int] = None
     class Config:
         orm_mode = True
+
+class CustomerShow(Customer):
+    org: Optional[dicts.OrgShow]
 
 #Поставщик
 class SupplierBaseModel(BaseModel):
     org_id: int
 
-class Supplier(SupplierBaseModel):
+class SupplierCreate(SupplierBaseModel):
     class Config:
         orm_mode = True
 
-class SupplierShow(SupplierBaseModel):
+class Supplier(SupplierBaseModel):
     id: Optional[int] = None
     class Config:
         orm_mode = True
+
+class SupplierShow(Supplier):
+    org: Optional[dicts.OrgShow]
 
 #Перевозщик
 class CarrierBaseModel(BaseModel):
     org_id: int
 
-class Carrier(CarrierBaseModel):
+class CarrierCreate(CarrierBaseModel):
     class Config:
         orm_mode = True
 
-class CarrierShow(CarrierBaseModel):
+class Carrier(CarrierBaseModel):
     id: Optional[int] = None
     class Config:
         orm_mode = True
+
+class CarrierShow(Carrier):
+    org: Optional[dicts.OrgShow]
 #Владелец
 class OwnerBaseModel(BaseModel):
     org_id: int
 
-class Owner(OwnerBaseModel):
+class OwnerCreate(OwnerBaseModel):
     class Config:
         orm_mode = True   
 
-class OwnerShow(OwnerBaseModel):
+class Owner(OwnerBaseModel):
     id: Optional[int] = None
     class Config:
         orm_mode = True 
 
+class OwnerShow(Owner):
+    org: Optional[dicts.OrgShow]
 #Заявка
 class BidBaseModel(BaseModel):
     point_id: int
@@ -93,9 +104,9 @@ class Bid(BidBaseModel):
         orm_mode = True
 class BidShow(Bid):
     point_name: str
-    cargo_name: int
-    customer_name: int
-    supplier_name: int
+    cargo_name: str
+    customer_name: str
+    supplier_name: str
 
 #Подтверждение заявки
 class BidConfirmBaseModel(BaseModel):
@@ -107,9 +118,13 @@ class BidConfirmCreate(BidConfirmBaseModel):
     class Config:
         orm_mode = True
 
-class BidConfirmShow(BidConfirmBaseModel):
+class BidConfirm(BidConfirmBaseModel):
     id: Optional[int] = None
     confirm_date: Optional[datetime] = None
+    class Config:
+        orm_mode = True
+
+class BidConfirmShow(BidConfirm):
     bid: Optional[BidShow] = None
     class Config:
         orm_mode = True
@@ -129,9 +144,12 @@ class BidDeliveryCreate(BidDeliveryBaseModel):
     class Config:
         orm_mode = True
 
-class BidDeliveryShow(BidDeliveryBaseModel):
+class BidDelivery(BidDeliveryBaseModel):
     id: Optional[int] = None
     created_date: Optional[datetime] = None
+    class Config:
+        orm_mode = True 
+class BidDeliveryShow(BidDelivery):
     bid: Optional[BidShow] = None
     carrier_name: str
     class Config:

@@ -13,8 +13,8 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.CustomerShow)
-def create_customer(request: schemas.Customer, db: Session = Depends(get_db)):
+@router.post('/', response_model=schemas.Customer)
+def create_customer(request: schemas.CustomerCreate, db: Session = Depends(get_db)):
     return nav.create_customer(db, request)
 
 

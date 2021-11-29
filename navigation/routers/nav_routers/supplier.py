@@ -13,8 +13,8 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.SupplierShow)
-def create_supplier(request: schemas.Supplier, db: Session = Depends(get_db)):
+@router.post('/', response_model=schemas.Supplier)
+def create_supplier(request: schemas.SupplierCreate, db: Session = Depends(get_db)):
     return nav.create_supplier(db, request)
 
 
