@@ -278,6 +278,15 @@ def get_bids_confirm(db: Session):
         bids.append(bid)
     return bids
 
+def update_bid_confirm(db: Session, confirm: schemas.BidConfirm):
+    confirm = confirm.dict()
+    confirm_model = models.BidConfirm(**confirm.dict())
+    db_confirm = db.query(models.BidConfirm).filter(models.BidConfirm.id == confirm.id)
+    if db_confirm.one_or_none()==None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"BidConfirm with id {id} not found")
+    db_confirm.update(confirm)
+    return confirm_model
 #bid_delivery
 
 def create_bid_delivery(db: Session, bid_delivery: schemas.BidDeliveryCreate):
@@ -295,6 +304,7 @@ def delete_bid_delivery(db: Session, id: int):
 
 def get_bid_delivery(db: Session, id: int):
     return db.query(models.BidDelivery).filter(models.BidDelivery.id == id).one_or_none()
+
 
 
 def get_bids_delivery(db: Session, bid_id: int):
@@ -339,6 +349,15 @@ def get_bids_delivery_confirm(db: Session, bid_id: int):
         resault.append(item)
     return resault
 
+def update_bid_delivery_confirm(db: Session, confirm: schemas.BidDeliveryConfirm):
+    confirm = confirm.dict()
+    confirm_model = models.BidDeliveryConfirm(**confirm.dict())
+    db_confirm = db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.id == confirm.id)
+    if db_confirm.one_or_none()==None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"BidDeliveryConfirm with id {id} not found")
+    db_confirm.update(confirm)
+    return confirm_model
 #bid_owner_confirm
 
 def create_bid_owner_confirm(db: Session, confirm: schemas.BidOwnerConfirmCreate):
@@ -368,3 +387,13 @@ def get_bids_owner_confirm(db: Session):
         item["bid_delivery"] = get_bids_delivery(db, item.get("bid_id"))
         resault.append(item)
     return resault
+
+def update_bid_owner_confirm(db: Session, confirm: schemas.BidOwnerConfirm):
+    confirm = confirm.dict()
+    confirm_model = models.BidOwnerConfirm(**confirm.dict())
+    db_confirm = db.query(models.BidOwnerConfirm).filter(models.BidOwnerConfirm.id == confirm.id)
+    if db_confirm.one_or_none()==None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"BidOwnerConfirm with id {id} not found")
+    db_confirm.update(confirm)
+    return confirm_model

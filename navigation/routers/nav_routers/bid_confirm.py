@@ -32,4 +32,8 @@ def get_bid_confirm(id: int, db: Session = Depends(get_db)):
 @router.get('/')
 def get_bids_confirm(db: Session = Depends(get_db)):
     return nav.get_bids_confirm(db)
+
+@router.put('/', response_model=schemas.BidConfirm)
+def update_bid_confirm(request : schemas.BidConfirm, db: Session = Depends(get_db)):
+    return nav.update_bid_confirm(db, request)
     
