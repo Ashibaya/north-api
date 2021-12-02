@@ -343,7 +343,7 @@ def get_bid_delivery_confirm(db: Session, id: int):
 
 def get_bids_delivery_confirm(db: Session, bid_id: int):
     bids_conf = db.query(models.BidDeliveryConfirm).all() if bid_id == None else get_bid_delivery_confirm(db, bid_id)
-    bid_delivery_dict = { item.id: item for item in get_bids_delivery(db)}
+    bid_delivery_dict = { item.get("id"): item for item in get_bids_delivery(db)}
     resault = []
     for item in bids_conf:
         item = get_dict_from_row(item)
@@ -382,7 +382,7 @@ def get_bid_owner_confirm(db: Session, id: int):
 
 def get_bids_owner_confirm(db: Session):
     bids_conf = db.query(models.BidOwnerConfirm).all()
-    bid_dict = { item.id: item for item in get_bids(db)}
+    bid_dict = { item.get("id"): item for item in get_bids(db)}
     resault = []
     for item in bids_conf:
         item = get_dict_from_row(item)
