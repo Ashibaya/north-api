@@ -308,13 +308,14 @@ def get_bid_delivery(db: Session, id: int):
 
 
 
-def get_bids_delivery(db: Session, bid_id: int):
+def get_bids_delivery(db: Session):
     bids_delivery = db.query(models.BidDelivery).all()
-    bid_dict = {it.id : it for it in get_bids(db)}
+    bid_dict = {it.get("id") : it for it in get_bids(db)}
     carrier_dict = { it.id: dict_repo.get_org(db, it.org_id).name for it in get_carriers_origin(db)}
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)
+        print(bid_delivery)
         bid_delivery["bid"] = bid_dict.get(bid_delivery.get("bid_id"))
         bid_delivery["carrier_name"] = carrier_dict.get(bid_delivery.get("carrier_id"))
         bids.append(bid_delivery)
