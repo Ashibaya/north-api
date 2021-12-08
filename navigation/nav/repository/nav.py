@@ -343,7 +343,7 @@ def delete_bid_delivery_confirm(db: Session, id: int):
     return {"status": "done"}
 
 def get_bid_delivery_confirm(db: Session, id: int):
-    return db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.od == id).one_or_none()
+    return db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.id == id).one_or_none()
 
 
 def get_bids_delivery_confirm(db: Session, bid_id: int):
