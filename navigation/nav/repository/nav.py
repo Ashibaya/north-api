@@ -346,7 +346,7 @@ def get_bid_delivery_confirm(db: Session, id: int):
     return db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.id == id).one_or_none()
 
 
-def get_bids_delivery_confirm(db: Session, bid_id: int):
+def get_bids_delivery_confirm(db: Session, bid_id: int =None):
     bids_conf = db.query(models.BidDeliveryConfirm).all() if bid_id == None else get_bid_delivery_confirm(db, bid_id)
     bid_delivery_dict = { item.get("id"): item for item in get_bids_delivery(db)}
     resault = []
