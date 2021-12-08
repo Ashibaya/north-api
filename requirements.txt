@@ -3,5 +3,4 @@ bcrypt
 passlib
 python-jose
 python-multipart
-psycopg2-binary
 fastapi

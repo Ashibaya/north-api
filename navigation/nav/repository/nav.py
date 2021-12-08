@@ -258,7 +258,10 @@ def create_bid_confirm(db: Session, bid_confirm: schemas.BidConfirmCreate):
 
 def delete_bid_confirm(db: Session,id: int):
     bid = db.query(models.BidConfirm).filter(models.BidConfirm.id == id)
-    bid.delete()
+    if bid.first() == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Bid with id = {id} is not found")
+    bid.delete(synchronize_session=False)
     db.commit()
     return {"status":"done"}
 
@@ -299,7 +302,7 @@ def create_bid_delivery(db: Session, bid_delivery: schemas.BidDeliveryCreate):
 
 def delete_bid_delivery(db: Session, id: int):
     bid = db.query(models.BidDelivery).filter(models.BidDelivery.id == id)
-    bid.delete()
+    bid.delete(synchronize_session=False)
     db.commit()
     return {"status": "done"}
 
@@ -315,7 +318,6 @@ def get_bids_delivery(db: Session):
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)
-        print(bid_delivery)
         bid_delivery["bid"] = bid_dict.get(bid_delivery.get("bid_id"))
         bid_delivery["carrier_name"] = carrier_dict.get(bid_delivery.get("carrier_id"))
         bids.append(bid_delivery)
@@ -333,7 +335,10 @@ def create_bid_delivery_confirm(db: Session, confirm: schemas.BidDeliveryConfirm
 
 def delete_bid_delivery_confirm(db: Session, id: int):
     db_conf = db.query(models.BidDeliveryConfirm).filter(models.BidDeliveryConfirm.id == id)
-    db_conf.delete()
+    if db_conf.one_or_none()==None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"BidDeliveryConfirm with id {id} not found")
+    db_conf.delete(synchronize_session=False)
     db.commit()
     return {"status": "done"}
 
@@ -372,7 +377,10 @@ def create_bid_owner_confirm(db: Session, confirm: schemas.BidOwnerConfirmCreate
 
 def delete_bid_owner_confirm(db: Session, id: int):
     db_conf = db.query(models.BidOwnerConfirm).filter(models.BidOwnerConfirm.id == id)
-    db_conf.delete()
+    if db_conf.one_or_none()==None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"BidOwnerConfirm with id {id} not found")
+    db_conf.delete(synchronize_session=False)
     db.commit()
     return {"status": "done"}
 
