@@ -156,7 +156,7 @@ class BidDeliveryShow(BidDelivery):
         orm_mode = True
 #Подтверждение доставки
 class BidDeliveryConfirmBaseModel(BaseModel):
-    bid_delivery_id: int
+    delivery_id: int
     is_confirm: Optional[bool] = None
     description: Optional[str] = None
 
