@@ -9,7 +9,7 @@ SQL_ALCHEMY_DATABASE_URL = "sqlite:///north.db"
 uri = os.getenv("SQL_ALCHEMY_DATABASE_URL")
 
 engine = create_engine(
-    SQL_ALCHEMY_DATABASE_URL
+    SQL_ALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False}
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

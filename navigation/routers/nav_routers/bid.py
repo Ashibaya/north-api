@@ -25,10 +25,9 @@ def delete_bid(id: int, db: Session = Depends(get_db)):
 
 @router.get('/{id}', response_model=schemas.BidShow)
 def get_bid(id: int, db: Session = Depends(get_db)):
-    return nav.get_bid(db, id)
+    return nav.get_bid_info(db, id)
 
 
 @router.get('/')
 def get_bids(db: Session = Depends(get_db)):
     return nav.get_bids(db)
-    

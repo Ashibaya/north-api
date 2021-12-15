@@ -14,9 +14,6 @@ def create_unit(db: Session, unit: schemas.UnitAdd):
     return db_unit
 
 
-def get_units(db: Session):
-    return db.query(models.Unit).all()
-
 def update_unit(db: Session, unit: schemas.UnitAdd):
     vals = unit.dict()
     model = models.Unit(**unit.dict())
@@ -29,8 +26,20 @@ def update_unit(db: Session, unit: schemas.UnitAdd):
     return model
 
 
+def select_unit(db: Session, id: int):
+    return db.query(models.Unit).filter(models.Unit.id == id)
+
+
+def select_units(db: Session):
+    return db.query(models.Unit)
+
+
 def get_unit(db: Session, id: int):
-    return db.query(models.Unit).filter(models.Unit.id == id).first()
+    return select_unit(db, id).first()
+
+
+def get_units(db: Session):
+    return select_units(db).all()
 
 
 def delete_unit(db: Session, id: int):
@@ -40,7 +49,7 @@ def delete_unit(db: Session, id: int):
                             detail=f"Unit with id {id} not found")
     db_unit.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 # Cargo
 
@@ -53,12 +62,21 @@ def create_cargo(db: Session, cargo: schemas.CargoAdd):
     return db_cargo
 
 
+def select_cargo(db: Session, id: int):
+    return db.query(models.Cargo).filter(models.Cargo.id == id)
+
+
+def select_cargos(db: Session):
+    return db.query(models.Cargo)
+
+
 def get_cargos(db: Session):
-    return db.query(models.Cargo).all()
+    return select_cargos(db).all()
 
 
 def get_cargo(db: Session, id: int):
-    return db.query(models.Cargo).filter(models.Cargo.id == id).first()
+    return select_cargo(db, id).first()
+
 
 def update_cargo(db: Session, cargo: schemas.CargoAdd):
     vals = cargo.dict()
@@ -71,6 +89,7 @@ def update_cargo(db: Session, cargo: schemas.CargoAdd):
     db.commit()
     return model
 
+
 def delete_cargo(db: Session, id: int):
     db_cargo = db.query(models.Cargo).filter(models.Cargo.id == id)
     if not db_cargo.first():
@@ -78,7 +97,7 @@ def delete_cargo(db: Session, id: int):
                             detail=f"Cargo with id {id} not found")
     db_cargo.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 
 # Region
@@ -91,12 +110,21 @@ def create_region(db: Session, region: schemas.RegionAdd):
     return db_region
 
 
+def select_regions(db: Session):
+    return db.query(models.Region)
+
+
+def select_region(db: Session, id: int):
+    return db.query(models.Region).filter(models.Region.id == id)
+
+
 def get_regions(db: Session):
-    return db.query(models.Region).all()
+    return select_regions(db).all()
 
 
 def get_region(db: Session, id: int):
-    return db.query(models.Region).filter(models.Region.id == id).first()
+    return select_region(db, id).first()
+
 
 def update_region(db: Session, region: schemas.RegionAdd):
     vals = region.dict()
@@ -117,7 +145,7 @@ def delete_region(db: Session, id: int):
                             detail=f"Region with id {id} not found")
     db_region.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 
 # Locality
@@ -131,23 +159,34 @@ def create_locality(db: Session, locality: schemas.LocalityAdd):
     return db_locality
 
 
+def select_localities(db: Session):
+    return db.query(models.Locality)
+
+
+def select_locality(db: Session, id: int):
+    return db.query(models.Locality).filter(models.Locality.id == id)
+
+
 def get_localities(db: Session):
-    return db.query(models.Locality).all()
+    return select_localities(db).all()
 
 
 def get_locality(db: Session, id: int):
-    return db.query(models.Locality).filter(models.Locality.id == id).first()
+    return select_locality(db, id).first()
+
 
 def update_locality(db: Session, locality: schemas.LocalityAdd):
     vals = locality.dict()
     model = models.Locality(**locality.dict())
-    db_locality = db.query(models.Locality).filter(models.Locality.id == model.id)
+    db_locality = db.query(models.Locality).filter(
+        models.Locality.id == model.id)
     if not db_locality.one_or_none():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Locality with id {id} not found")
     db_locality.update(vals)
     db.commit()
     return model
+
 
 def delete_locality(db: Session, id: int):
     db_locality = db.query(models.Locality).filter(models.Locality.id == id)
@@ -156,7 +195,7 @@ def delete_locality(db: Session, id: int):
                             detail=f"Locality with id {id} not found")
     db_locality.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 # Rival
 
@@ -169,12 +208,21 @@ def create_rival(db: Session, rival: schemas.RivalAdd):
     return db_rival
 
 
+def select_rivals(db: Session):
+    return db.query(models.Rival)
+
+
+def select_rival(db: Session, id: int):
+    return db.query(models.Rival).filter(models.Rival.id == id)
+
+
 def get_rivals(db: Session):
-    return db.query(models.Rival).all()
+    return select_rivals(db).all()
 
 
 def get_rival(db: Session, id: int):
-    return db.query(models.Rival).filter(models.Rival.id == id).first()
+    return select_rival(db, id).first()
+
 
 def update_rival(db: Session, rival: schemas.RivalAdd):
     vals = rival.dict()
@@ -187,6 +235,7 @@ def update_rival(db: Session, rival: schemas.RivalAdd):
     db.commit()
     return model
 
+
 def delete_rival(db: Session, id: int):
     db_rival = db.query(models.Rival).filter(models.Rival.id == id)
     if not db_rival.first():
@@ -194,7 +243,7 @@ def delete_rival(db: Session, id: int):
                             detail=f"Rival with id {id} not found")
     db_rival.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 
 # Org
@@ -211,12 +260,20 @@ def create_org(db: Session, org: schemas.OrgAdd):
     return db_org
 
 
+def select_orgs(db: Session):
+    return db.query(models.Org)
+
+
+def select_org(db: Session, id: int):
+    return db.query(models.Org).filter(models.Org.id == id)
+
+
 def get_orgs(db: Session):
-    return db.query(models.Org).all()
+    return select_orgs(db).all()
 
 
 def get_org(db: Session, id: int):
-    return db.query(models.Org).filter(models.Org.id == id).first()
+    return select_org(db, id).first()
 
 
 def update_org(db: Session, org: schemas.OrgAdd):
@@ -230,6 +287,7 @@ def update_org(db: Session, org: schemas.OrgAdd):
     db.commit()
     return model
 
+
 def delete_org(db: Session, id: int):
     db_org = db.query(models.Org).filter(models.Org.id == id)
     if not db_org.first():
@@ -237,7 +295,7 @@ def delete_org(db: Session, id: int):
                             detail=f"Org with id {id} not found")
     db_org.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 
 # Point
@@ -252,12 +310,20 @@ def create_point(db: Session, point: schemas.PointAdd):
     return db_point
 
 
+def select_points(db: Session):
+    return db.query(models.Point)
+
+
+def select_point(db: Session, id: int):
+    return db.query(models.Point).filter(models.Point.id == id)
+
+
 def get_points(db: Session):
-    return db.query(models.Point).all()
+    return select_points(db).all()
 
 
 def get_point(db: Session, id: int):
-    return db.query(models.Point).filter(models.Point.id == id).first()
+    return select_point(db, id).first()
 
 
 def update_point(db: Session, point: schemas.PointAdd):
@@ -271,6 +337,7 @@ def update_point(db: Session, point: schemas.PointAdd):
     db.commit()
     return model
 
+
 def delete_point(db: Session, id: int):
     db_point = db.query(models.Point).filter(models.Point.id == id)
     if not db_point.first():
@@ -278,7 +345,7 @@ def delete_point(db: Session, id: int):
                             detail=f"Point with id {id} not found")
     db_point.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 
 # Boat
@@ -293,12 +360,21 @@ def create_boat(db: Session, boat: schemas.BoatAdd):
     return db_boat
 
 
+def select_boats(db: Session):
+    return db.query(models.Boat)
+
+
+def select_boat(db: Session, id: int):
+    return db.query(models.Boat).filter(models.Boat.id == id)
+
+
 def get_boats(db: Session):
-    return db.query(models.Boat).all()
+    return select_boats(db).all()
 
 
 def get_boat(db: Session, id: int):
-    return db.query(models.Boat).filter(models.Boat.id == id).first()
+    return select_boat(db, id).first()
+
 
 def update_boat(db: Session, boat: schemas.BoatAdd):
     vals = boat.dict()
@@ -319,7 +395,7 @@ def delete_boat(db: Session, id: int):
                             detail=f"Boat with id {id} not found")
     db_boat.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
 
 # Storage
 
@@ -336,12 +412,20 @@ def create_storage(db: Session, storage: schemas.StorageAdd):
     return db_storage
 
 
+def select_storages(db: Session):
+    return db.query(models.Storage)
+
+
+def select_storage(db: Session, id: int):
+    return db.query(models.Storage).filter(models.Storage.id == id)
+
+
 def get_storages(db: Session):
-    return db.query(models.Storage).all()
+    return select_storages.all()
 
 
 def get_storage(db: Session, id: int):
-    return db.query(models.Storage).filter(models.Storage.id == id).first()
+    return select_storage(db, id).first()
 
 
 def update_storage(db: Session, storage: schemas.StorageAdd):
@@ -363,4 +447,4 @@ def delete_storage(db: Session, id: int):
                             detail=f"Storage with id {id} not found")
     db_storage.delete(synchronize_session=False)
     db.commit()
-    return {'status':'done'}
+    return {'status': 'done'}
