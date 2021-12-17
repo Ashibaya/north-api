@@ -515,7 +515,7 @@ def get_bids_owner_confirm(db: Session):
     for item in bids_conf:
         item = get_dict_from_row(item)
         item["bid"] = bid_dict.get(item.get("bid_id"))
-        item["bid_delivery"] = get_bids_delivery(db, item.get("bid_id"))
+        item["bid_delivery"] = get_bid_delivery(db, item.get("bid_id"))
         resault.append(item)
     return resault
 
