@@ -531,4 +531,5 @@ def update_bid_owner_confirm(db: Session, confirm_schema: schemas.BidOwnerConfir
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"BidOwnerConfirm with id {id} not found")
     db_confirm.update(confirm)
+    db.commit()
     return confirm_model
