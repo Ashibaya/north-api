@@ -418,7 +418,7 @@ def get_bid_delivery(db: Session, id: int):
     return db.query(models.BidDelivery).filter(models.BidDelivery.id == id).one_or_none()
 
 
-def get_bids_delivery(db: Session, bid_id: int):
+def get_bids_delivery(db: Session, bid_id: int = None):
     bids_delivery_query = db.query(models.BidDelivery).filter(
         models.BidDelivery.bid_id == bid_id) if id else db.query(models.BidDelivery)
     bids_delivery = bids_delivery_query.all()
