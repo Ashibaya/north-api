@@ -433,7 +433,11 @@ def get_bids_delivery(db: Session, bid_id: int = None):
     return bids
 
 
+def get_bid_delivery_show(db: Session, id: int):
+    return get_bids_delivery(db, id)
+
 # bid_delivery_confirm
+
 
 def create_bid_delivery_confirm(db: Session, confirm: schemas.BidDeliveryConfirmCreate):
     db_conf = models.BidDeliveryConfirm(**confirm.dict())
