@@ -415,15 +415,13 @@ def get_bid_delivery(db: Session, id: int):
 
 def get_bids_delivery(db: Session, bid_id: int = None):
     bids_delivery_query = db.query(models.BidDelivery).filter(
-        models.BidDelivery.bid_id == bid_id) if id else db.query(models.BidDelivery)
+        models.BidDelivery.bid_id == bid_id) if bid_id != None else db.query(models.BidDelivery)
     bids_delivery = bids_delivery_query.all()
     bid_dict = {it.get("id"): it for it in get_bids(db)}
     carrier_dict = {it.id: dict_repo.get_org(
         db, it.org_id).name for it in get_carriers_origin(db)}
     print(bids_delivery)
     bids = []
-    if len(bids_delivery) < 1:
-        return bids
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)
         bid_delivery["bid"] = bid_dict.get(bid_delivery.get("bid_id"))
