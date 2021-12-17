@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
 from navigation.nav.repository import nav
 from auth import database
-
+from typing import List
 router = APIRouter(
     prefix="/carrier"
 )
@@ -28,7 +28,6 @@ def get_carrier(id: int, db: Session = Depends(get_db)):
     return nav.get_carrier(db, id)
 
 
-@router.get('/')
+@router.get('/', response_model=List[schemas.CarrierShow])
 def get_carriers(db: Session = Depends(get_db)):
     return nav.get_carriers(db)
-    

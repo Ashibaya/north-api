@@ -14,6 +14,11 @@ class UnitAdd(UnitBaseModel):
         orm_mode = True
 
 
+class UnitShow(UnitBaseModel):
+    class Config:
+        orm_mode = True
+
+
 class CargoBaseModel(BaseModel):
     id: Optional[int] = None
     name: Optional[constr(max_length=255)]
@@ -26,12 +31,21 @@ class CargoAdd(CargoBaseModel):
         orm_mode = True
 
 
+class CargoShow(CargoAdd):
+    unit: Optional[UnitShow]
+
+
 class RegionBaseModel(BaseModel):
     id: Optional[int] = None
     name: Optional[constr(max_length=255)]
 
 
 class RegionAdd(RegionBaseModel):
+    class Config:
+        orm_mode = True
+
+
+class RegionShow(RegionBaseModel):
     class Config:
         orm_mode = True
 
@@ -48,12 +62,21 @@ class LocalityAdd(LocalityBaseModel):
         orm_mode = True
 
 
+class LocalityShow(LocalityAdd):
+    region: Optional[RegionShow]
+
+
 class RivalBaseModel(BaseModel):
     id: Optional[int] = None
     name: Optional[constr(max_length=255)]
 
 
 class RivalAdd(RivalBaseModel):
+    class Config:
+        orm_mode = True
+
+
+class RivalShow(RivalBaseModel):
     class Config:
         orm_mode = True
 
@@ -93,6 +116,11 @@ class PointAdd(PointBaseModel):
         orm_mode = True
 
 
+class PointShow(PointAdd):
+    locality: Optional[LocalityShow]
+    rival: Optional[RivalShow]
+
+
 class BoatBaseModel(BaseModel):
     id: Optional[int] = None
     name: Optional[constr(max_length=255)]
@@ -103,6 +131,10 @@ class BoatAdd(BoatBaseModel):
 
     class Config:
         orm_mode = True
+
+
+class BoatShow(BoatAdd):
+    org: Optional[OrgShowAll]
 
 
 class StorageBaseModel(BaseModel):
@@ -117,3 +149,8 @@ class StorageAdd(StorageBaseModel):
 
     class Config:
         orm_mode = True
+
+
+class StorageShow(StorageAdd):
+    point: Optional[PointShow]
+    cargos: Optional[CargoShow]
