@@ -418,8 +418,10 @@ def get_bid_delivery(db: Session, id: int):
     return db.query(models.BidDelivery).filter(models.BidDelivery.id == id).one_or_none()
 
 
-def get_bids_delivery(db: Session):
-    bids_delivery = db.query(models.BidDelivery).all()
+def get_bids_delivery(db: Session, bid_id: int):
+    bids_delivery_query = db.query(models.BidDelivery).filter(
+        models.BidDelivery.bid_id == bid_id) if id else db.query(models.BidDelivery)
+    bids_delivery = bids_delivery_query.all()
     bid_dict = {it.get("id"): it for it in get_bids(db)}
     carrier_dict = {it.id: dict_repo.get_org(
         db, it.org_id).name for it in get_carriers_origin(db)}
@@ -515,7 +517,7 @@ def get_bids_owner_confirm(db: Session):
     for item in bids_conf:
         item = get_dict_from_row(item)
         item["bid"] = bid_dict.get(item.get("bid_id"))
-        item["bid_delivery"] = get_bid_delivery(db, item.get("bid_id"))
+        item["bid_delivery"] = get_bids_delivery(db, item.get("bid_id"))
         resault.append(item)
     return resault
 
