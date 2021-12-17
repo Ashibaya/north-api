@@ -420,7 +420,7 @@ def get_bids_delivery(db: Session, bid_id: int = None):
     bid_dict = {it.get("id"): it for it in get_bids(db)}
     carrier_dict = {it.id: dict_repo.get_org(
         db, it.org_id).name for it in get_carriers_origin(db)}
-    print(carrier_dict)
+    print(bids_delivery)
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)
