@@ -197,7 +197,6 @@ class BidDelivery(BidDeliveryBaseModel):
 
 class BidDeliveryShow(BidDelivery):
     bid: Optional[BidShow] = None
-    carrier_name: str
 
     class Config:
         orm_mode = True
