@@ -4,3 +4,4 @@ passlib
 python-jose
 python-multipart
 fastapi
+alembic

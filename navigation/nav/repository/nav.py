@@ -307,9 +307,12 @@ def make_bids(db: Session, bid_id: int = None):
     #    get_bid(db, bid_id)]
     supplier = aliased(select_suppliers_joins(db).subquery(), "supplier")
     customer = aliased(select_customers_joins(db).subquery(), "customer")
+    start = aliased(db.query(dict_models.Point).subquery(), "start_point")
+    end = aliased(db.query(dict_models.Point).subquery(), "end_point")
     ss = select_bids(db).\
         join(dict_models.Cargo).\
-        join(dict_models.Point).\
+        join(start, models.Bid.point_id == start.columns.id).\
+        join(end, models.Bid.end_point_id == end.columns.id).\
         join(customer, models.Bid.customer_id == customer.columns.id).\
         join(supplier, models.Bid.supplier_id == supplier.columns.id).\
         with_entities(
@@ -322,8 +325,10 @@ def make_bids(db: Session, bid_id: int = None):
             models.Bid.start_date,
             models.Bid.end_date,
             models.Bid.created_date,
+            models.Bid.end_point_id,
             dict_models.Cargo.name.label("cargo_name"),
-            dict_models.Point.name.label("point_name"),
+            start.columns.name.label("point_name"),
+            end.columns.name.label("end_point_name"),
             customer.columns.name.label("customer_name"),
             supplier.columns.name.label("supplier_name")
 
@@ -340,6 +345,19 @@ def get_bids(db: Session):
 def get_bid_info(db: Session, id: int):
     res = make_bids(db, id).filter(models.Bid.id == id)
     return res.first()
+
+
+def update_bid(db: Session, bid: schemas.Bid):
+    bid_dict = bid.dict()
+    confirm_model = models.Bid(**bid.dict())
+    db_confirm = db.query(models.Bid).filter(
+        models.Bid.id == bid_dict.get("id"))
+    if db_confirm.one_or_none() == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"Bid with id {id} not found")
+    db_confirm.update(bid_dict)
+    db.commit()
+    return confirm_model
 # bid confirm
 
 
@@ -391,6 +409,8 @@ def update_bid_confirm(db: Session, confirm: schemas.BidConfirm):
     db_confirm.update(conf)
     db.commit()
     return confirm_model
+
+
 # bid_delivery
 
 
@@ -420,7 +440,6 @@ def get_bids_delivery(db: Session, bid_id: int = None):
     bid_dict = {it.get("id"): it for it in get_bids(db)}
     carrier_dict = {it.id: dict_repo.get_org(
         db, it.org_id).name for it in get_carriers_origin(db)}
-    print(bids_delivery)
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)

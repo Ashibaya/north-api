@@ -49,6 +49,7 @@ class Bid(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     point_id = Column(Integer, ForeignKey("points.id"))
+    end_point_id = Column(Integer, ForeignKey("points.id"))
     cargo_id = Column(Integer, ForeignKey("cargos.id"))
     quantity = Column(Float)
     customer_id = Column(Integer, ForeignKey("customers.id"))
@@ -56,7 +57,6 @@ class Bid(Base):
     created_date = Column(DateTime, default=datetime.today)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date, nullable=False)
-    point = relationship(dicts.Point, uselist=False)
     cargo = relationship(dicts.Cargo, uselist=False)
     #customer = relationship(Customer, uselist=False)
     #supplier_id = relationship(Supplier, uselist=False)

@@ -13,34 +13,46 @@ def get_bid_plan(db: Session):
     confirm_query = db.query(nav_models.BidOwnerConfirm).filter(
         nav_models.BidOwnerConfirm.is_confirm == True)
     confirm = aliased(confirm_query.subquery(), "confirm")
-    dayquery = extract('day', nav_models.Bid.end_date)
-    caseblock = case(
-        [
-            (dayquery < 11, 1),
-            (dayquery < 21, 2),
-            (dayquery > 21, 3)
-        ]
-    )
+
     bids = nav_repo.select_bids(db).join(confirm, bid.id == confirm.columns.bid_id)\
-        .group_by(bid.id,
-                  bid.customer_id,
-                  bid.cargo_id,
-                  bid.point_id,
-                  extract('month', nav_models.Bid.end_date).label("month"),
-                  extract('year', nav_models.Bid.end_date).label("year"),
-                  caseblock.label("decade"))\
+        .group_by(
+        bid.customer_id,
+        bid.cargo_id,
+        bid.point_id,
+        bid.end_point_id,
+        extract('month', nav_models.Bid.end_date).label("month"),
+        extract('year', nav_models.Bid.end_date).label("year"),
+    )\
         .with_entities(
-            bid.id,
             bid.customer_id,
             bid.cargo_id,
             bid.point_id,
+            bid.end_point_id,
             extract('month', nav_models.Bid.end_date).label("month"),
             extract('year', nav_models.Bid.end_date).label("year"),
-            caseblock.label("decade"),
             func.sum(nav_models.Bid.quantity).label("total")
     )
     print(bids)
     return bids.all()
+
+
+def get_bid_delivery(db: Session):
+    dayquery = extract('day', nav_models.BidDelivery.end_date)
+    caseblock = case(
+        [
+            (0 < dayquery < 11, 1),
+            (11 < dayquery < 21, 2),
+            (dayquery > 21, 3)
+        ]
+    )
+    delivery_confirm_query = db.query(nav_models.BidDeliveryConfirm)\
+        .filter(nav_models.nav_models.BidDeliveryConfirm.is_confirm == True)
+    delivery_confirm = aliased(
+        delivery_confirm_query.subquery(), "delivery_confirm")
+    delivery_query = db.query(nav_models.BidDelivery)\
+        .join(delivery_confirm, nav_models.BidDelivery.id == delivery_confirm.columns.delivery_id)
+    print(delivery_query)
+    return delivery_query.all()
 
 
 def get_bid_plan_stat(db: Session, year: int, month: int, customer_id: int):

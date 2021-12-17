@@ -121,6 +121,7 @@ class BidBaseModel(BaseModel):
     supplier_id: int
     start_date: date
     end_date: date
+    end_point_id: int
 
 
 class BidCreate(BidBaseModel):
