@@ -424,6 +424,7 @@ def get_bids_delivery(db: Session, bid_id: int = None):
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)
+        print(bid_delivery)
         bid_delivery["bid"] = bid_dict.get(bid_delivery.get("bid_id"))
         bid_delivery["carrier_name"] = carrier_dict.get(
             bid_delivery.get("carrier_id"))
