@@ -76,6 +76,10 @@ class OrgAdd(OrgBaseModel):
         orm_mode = True
 
 
+class OrgShowAll(OrgAdd):
+    pass
+
+
 class PointBaseModel(BaseModel):
     id: Optional[int] = None
     name: Optional[constr(max_length=255)]

@@ -173,7 +173,7 @@ def select_carriers(db: Session):
 
 
 def select_carrier(db: Session, id: int):
-    return select_carriers.filter(models.Carrier.id == id)
+    return select_carriers(db).filter(models.Carrier.id == id)
 
 
 def select_carriers_joins(db: Session):
@@ -189,13 +189,8 @@ def get_carriers_origin(db: Session):
 
 
 def get_carriers(db: Session):
-    carriers = get_carriers_origin(db)
-    res = []
-    for item in carriers:
-        carrier = get_dict_from_row(item)
-        carrier["org"] = dict_repo.get_org(db, carrier.get("org_id"))
-        res.append(carrier)
-    return res
+
+    return get_carriers_origin(db)
 
 
 def get_carrier_origin(db: Session, id: int):
@@ -208,6 +203,7 @@ def get_carrier(db: Session, id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {id} not found")
     carrier = get_dict_from_row(db_carrier)
+    print(dict_repo.get_org(db, carrier.get("org_id")))
     carrier["org"] = dict_repo.get_org(db, carrier.get("org_id"))
     return carrier
 
@@ -425,6 +421,7 @@ def get_bids_delivery(db: Session, bid_id: int = None):
     bid_dict = {it.get("id"): it for it in get_bids(db)}
     carrier_dict = {it.id: dict_repo.get_org(
         db, it.org_id).name for it in get_carriers_origin(db)}
+    print(carrier_dict)
     bids = []
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)

@@ -2,7 +2,7 @@ from typing import Optional, List
 from pydantic import BaseModel
 from pydantic.types import constr
 from datetime import date, datetime
-from navigation.nav.schemas import dicts
+from navigation.nav.schemas.dicts import *
 
 # Декады
 
@@ -44,7 +44,7 @@ class Customer(CustomerBaseModel):
 
 
 class CustomerShow(Customer):
-    org: Optional[dicts.OrgShow]
+    org: Optional[OrgShowAll]
 
 # Поставщик
 
@@ -66,7 +66,7 @@ class Supplier(SupplierBaseModel):
 
 
 class SupplierShow(Supplier):
-    org: Optional[dicts.OrgShow]
+    org: Optional[OrgShowAll]
 
 # Перевозщик
 
@@ -88,7 +88,7 @@ class Carrier(CarrierBaseModel):
 
 
 class CarrierShow(Carrier):
-    org: Optional[dicts.OrgShow]
+    org: Optional[OrgShowAll] = None
 # Владелец
 
 
@@ -109,7 +109,7 @@ class Owner(OwnerBaseModel):
 
 
 class OwnerShow(Owner):
-    org: Optional[dicts.OrgShow]
+    org: Optional[OrgShowAll]
 # Заявка
 
 
