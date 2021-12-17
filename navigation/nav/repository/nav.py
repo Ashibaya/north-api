@@ -318,7 +318,15 @@ def make_bids(db: Session, bid_id: int = None):
         join(customer, models.Bid.customer_id == customer.columns.id).\
         join(supplier, models.Bid.supplier_id == supplier.columns.id).\
         with_entities(
-            models.Bid,
+            models.Bid.id,
+            models.Bid.point_id,
+            models.Bid.cargo_id,
+            models.Bid.quantity,
+            models.Bid.customer_id,
+            models.Bid.supplier_id,
+            models.Bid.start_date,
+            models.Bid.end_date,
+            models.Bid.created_date,
             dict_models.Cargo.name.label("cargo_name"),
             dict_models.Point.name.label("point_name"),
             customer.columns.name.label("customer_name"),
@@ -329,7 +337,9 @@ def make_bids(db: Session, bid_id: int = None):
 
 
 def get_bids(db: Session):
-    return make_bids(db).all()
+    bids = make_bids(db).all()
+    dicts = [dict(row) for row in bids]
+    return dicts
 
 
 def get_bid_info(db: Session, id: int):

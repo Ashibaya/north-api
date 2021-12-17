@@ -136,8 +136,7 @@ class Bid(BidBaseModel):
         orm_mode = True
 
 
-class BidShow(BaseModel):
-    Bid: Optional[Bid]
+class BidShow(Bid):
     point_name: str
     cargo_name: str
     customer_name: str
