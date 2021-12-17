@@ -395,11 +395,11 @@ def update_bid_confirm(db: Session, confirm: schemas.BidConfirm):
 
 
 def create_bid_delivery(db: Session, bid_delivery: schemas.BidDeliveryCreate):
-    bid_delivery = models.BidDelivery(**bid_delivery.dict())
-    db.add(bid_delivery)
+    bid_delivery_query = models.BidDelivery(**bid_delivery.dict())
+    db.add(bid_delivery_query)
     db.commit()
-    db.refresh(bid_delivery)
-    return bid_delivery
+    db.refresh(bid_delivery_query)
+    return bid_delivery_query
 
 
 def delete_bid_delivery(db: Session, id: int):
@@ -422,9 +422,10 @@ def get_bids_delivery(db: Session, bid_id: int = None):
         db, it.org_id).name for it in get_carriers_origin(db)}
     print(bids_delivery)
     bids = []
+    if len(bids_delivery) < 1:
+        return bids
     for bid_delivery in bids_delivery:
         bid_delivery = get_dict_from_row(bid_delivery)
-        print(bid_delivery)
         bid_delivery["bid"] = bid_dict.get(bid_delivery.get("bid_id"))
         bid_delivery["carrier_name"] = carrier_dict.get(
             bid_delivery.get("carrier_id"))
