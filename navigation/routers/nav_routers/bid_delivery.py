@@ -14,7 +14,7 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.BidDelivery)
+@router.post('/')
 def create_bid_delivery(request: schemas.BidDeliveryCreate, db: Session = Depends(get_db)):
     return nav.create_bid_delivery(db, request)
 
@@ -32,4 +32,3 @@ def get_bid_delivery(id: int, db: Session = Depends(get_db)):
 @router.get('/', response_model=List[schemas.BidDeliveryShow])
 def get_bids_delivery(db: Session = Depends(get_db)):
     return nav.get_bids_delivery(db)
-    

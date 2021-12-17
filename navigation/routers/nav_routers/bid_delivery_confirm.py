@@ -14,7 +14,7 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.BidDeliveryConfirmShow)
+@router.post('/')
 def create_bid_delivery_confirm(request: schemas.BidDeliveryConfirmCreate, db: Session = Depends(get_db)):
     return nav.create_bid_delivery_confirm(db, request)
 
@@ -33,6 +33,7 @@ def get_bid_delivery_confirm(id: int, db: Session = Depends(get_db)):
 def get_bids_delivery_confirm(db: Session = Depends(get_db)):
     return nav.get_bids_delivery_confirm(db)
 
+
 @router.put('/', response_model=schemas.BidDeliveryConfirm)
-def update_bid_delivery_confirm(request : schemas.BidDeliveryConfirm, db: Session = Depends(get_db)):
+def update_bid_delivery_confirm(request: schemas.BidDeliveryConfirm, db: Session = Depends(get_db)):
     return nav.update_bid_delivery_confirm(db, request)

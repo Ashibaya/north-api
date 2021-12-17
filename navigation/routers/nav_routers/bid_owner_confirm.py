@@ -14,7 +14,7 @@ get_db = database.get_db
 # Заказчик
 
 
-@router.post('/', response_model=schemas.BidOwnerConfirm)
+@router.post('/')
 def create_bid_owner_confirm(request: schemas.BidOwnerConfirmCreate, db: Session = Depends(get_db)):
     return nav.create_bid_owner_confirm(db, request)
 
@@ -33,6 +33,7 @@ def get_bid_owner_confirm(id: int, db: Session = Depends(get_db)):
 def get_bids_owner_confirm(db: Session = Depends(get_db)):
     return nav.get_bids_owner_confirm(db)
 
+
 @router.put('/', response_model=schemas.BidOwnerConfirm)
-def update_bid_owner_confirm(request : schemas.BidOwnerConfirm, db: Session = Depends(get_db)):
+def update_bid_owner_confirm(request: schemas.BidOwnerConfirm, db: Session = Depends(get_db)):
     return nav.update_bid_owner_confirm(db, request)
