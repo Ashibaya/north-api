@@ -421,7 +421,7 @@ def select_storage(db: Session, id: int):
 
 
 def get_storages(db: Session):
-    return select_storages.all()
+    return select_storages(db).all()
 
 
 def get_storage(db: Session, id: int):

@@ -19,7 +19,7 @@ class Cargo(Base):
                 primary_key=True, index=True)
     name = Column("name", String(255), index=True)
     unit_id = Column("unit_id", ForeignKey('units.id'))
-    unit = relationship(Unit, backref="cargo")
+    unit = relationship(Unit)
 
 
 class Region(Base):
@@ -37,7 +37,7 @@ class Locality(Base):
                 primary_key=True, index=True)
     name = Column("name", String(255), index=True)
     region_id = Column("region_id", ForeignKey("regions.id"))
-    region = relationship(Region,  backref="locality")
+    region = relationship(Region)
 
 
 class Rival(Base):
@@ -67,8 +67,8 @@ class Point(Base):
     name = Column("name", String(255), index=True)
     local_id = Column("local_id", ForeignKey("localities.id"))
     rival_id = Column("rival_id", ForeignKey("rivals.id"))
-    locality = relationship(Locality, backref="point")
-    rival = relationship(Rival, backref="point")
+    locality = relationship(Locality)
+    rival = relationship(Rival)
 
 
 class Boat(Base):
@@ -78,7 +78,7 @@ class Boat(Base):
                 primary_key=True, index=True)
     name = Column("name", String(255), index=True)
     org_id = Column("org_id", ForeignKey("orgs.id"))
-    org = relationship(Org, backref="boat")
+    org = relationship(Org)
 
 
 class Storage(Base):
@@ -90,5 +90,5 @@ class Storage(Base):
     org_id = Column("org_id", ForeignKey("orgs.id"))
     point_id = Column("point_id", ForeignKey("points.id"))
     cargo_id = Column("cargo_id", ForeignKey("cargos.id"))
-    point = relationship(Point, backref="storage")
-    cargos = relationship(Cargo, backref="storage")
+    point = relationship(Point)
+    cargos = relationship(Cargo)

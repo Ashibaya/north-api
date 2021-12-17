@@ -203,7 +203,6 @@ def get_carrier(db: Session, id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Carrier with id {id} not found")
     carrier = get_dict_from_row(db_carrier)
-    print(dict_repo.get_org(db, carrier.get("org_id")))
     carrier["org"] = dict_repo.get_org(db, carrier.get("org_id"))
     return carrier
 
